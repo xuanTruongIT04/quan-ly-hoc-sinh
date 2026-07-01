@@ -6,14 +6,17 @@ import { useAppStore } from '@/store/useAppStore'
 import { formatPrice } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { StudentForm } from './StudentForm'
 
 export function StudentList() {
   const t = useTranslations('students')
-  const { students, removeStudent } = useAppStore()
+  const { students, removeStudent, classNames } = useAppStore()
   const [q, setQ] = useState('')
+  const [cls, setCls] = useState('__all__')
   const rows = students
+    .filter((s) => (cls === '__all__' ? true : s.className === cls))
     .filter((s) => s.fullName.toLowerCase().includes(q.toLowerCase()))
     .sort((a, b) => a.sortOrder - b.sortOrder)
 
@@ -26,7 +29,16 @@ export function StudentList() {
 
   return (
     <div className="space-y-3">
-      <Input placeholder="🔍" value={q} onChange={(e) => setQ(e.target.value)} className="max-w-xs" />
+      <div className="flex flex-wrap gap-2">
+        <Input placeholder="🔍" value={q} onChange={(e) => setQ(e.target.value)} className="max-w-xs" />
+        <Select value={cls} onValueChange={(v) => v && setCls(v)}>
+          <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="__all__">{t('allClasses')}</SelectItem>
+            {classNames().map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+          </SelectContent>
+        </Select>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
