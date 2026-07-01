@@ -1,8 +1,16 @@
-export default function Home() {
+import { MonthYearPicker } from '@/components/dashboard/MonthYearPicker'
+import { StatCards } from '@/components/dashboard/StatCards'
+import { StudentTable } from '@/components/dashboard/StudentTable'
+
+export default function DashboardPage() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-2 text-center">
-      <h1 className="text-2xl font-semibold text-pink-700">Tổng quan</h1>
-      <p className="text-gray-500">Đang xây dựng</p>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold">Tổng quan</h1>
+        <MonthYearPicker />
+      </div>
+      <StatCards />
+      <StudentTable />
     </div>
-  );
+  )
 }
