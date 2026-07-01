@@ -1,8 +1,21 @@
+import { StudentList } from '@/components/students/StudentList'
+import { StudentForm } from '@/components/students/StudentForm'
+import { ImportExportButtons } from '@/components/students/ImportExportButtons'
+import { BulkImportDialog } from '@/components/students/BulkImportDialog'
+import { Button } from '@/components/ui/button'
+
 export default function StudentsPage() {
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-2 text-center">
-      <h1 className="text-2xl font-semibold text-pink-700">Học sinh</h1>
-      <p className="text-gray-500">Đang xây dựng</p>
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h1 className="text-xl font-bold">Quản lý học sinh</h1>
+        <div className="flex flex-wrap gap-2">
+          <StudentForm trigger={<Button>➕ Thêm học sinh</Button>} />
+          <BulkImportDialog />
+          <ImportExportButtons />
+        </div>
+      </div>
+      <StudentList />
     </div>
-  );
+  )
 }
