@@ -1,0 +1,27 @@
+{
+  "app": { "title": "Quản lý học sinh" },
+  "nav": { "dashboard": "Tổng quan", "students": "Học sinh", "attendance": "Điểm danh" },
+  "dashboard": {
+    "students": "Học sinh", "totalYear": "Tổng năm", "thisMonth": "Tháng này", "today": "Hôm nay",
+    "viewTodayAttendance": "Xem điểm danh hôm nay",
+    "colStudent": "HỌC SINH", "colClass": "LỚP", "colAttendance": "ĐIỂM DANH", "colSessions": "BUỔI", "colFee": "HỌC PHÍ THÁNG",
+    "empty": "Chưa có học sinh. Hãy thêm học sinh để bắt đầu.",
+    "allClasses": "Tất cả lớp", "searchPlaceholder": "🔍 Tìm học sinh..."
+  },
+  "students": {
+    "title": "Quản lý học sinh", "add": "Thêm học sinh", "edit": "Sửa", "delete": "Xóa",
+    "bulkImport": "Nhập hàng loạt", "export": "Xuất JSON", "import": "Nhập JSON",
+    "fullName": "Họ và tên", "className": "Lớp", "feeMode": "Cách tính học phí",
+    "perSession": "Theo buổi", "fixedMonthly": "Cố định / tháng", "fee": "Học phí", "fee2": "HP buổi 2",
+    "startDate": "Ngày bắt đầu học", "sortOrder": "STT",
+    "confirmDelete": "Xóa học sinh này? Bản ghi điểm danh liên quan cũng sẽ bị xóa.",
+    "saved": "Đã lưu", "deleted": "Đã xóa", "imported": "Đã nhập dữ liệu", "importError": "File không hợp lệ",
+    "bulkPlaceholder": "Mỗi dòng: Họ tên, Lớp, Học phí"
+  },
+  "attendance": {
+    "title": "Điểm danh", "selectClass": "Chọn lớp", "date": "Ngày",
+    "present": "Có", "absent": "Vắng", "markAllPresent": "Cả lớp Có", "bulk": "Điểm danh hàng loạt",
+    "noClass": "Chưa có lớp. Hãy thêm học sinh trước.", "saved": "Đã điểm danh"
+  },
+  "common": { "cancel": "Hủy", "save": "Lưu", "close": "Đóng" }
+}
