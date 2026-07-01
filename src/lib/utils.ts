@@ -16,3 +16,11 @@ export function monthKey(year: number, month: number): string {
 export function isInMonth(dateISO: string, year: number, month: number): boolean {
   return dateISO.startsWith(monthKey(year, month) + '-')
 }
+
+export function localTodayISO(): string {
+  const d = new Date()
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
+}

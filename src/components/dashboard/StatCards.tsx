@@ -3,14 +3,14 @@ import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
 import { usePeriodStore } from '@/store/usePeriodStore'
 import { revenueForMonth, revenueForYear, revenueForDay } from '@/lib/fees'
-import { formatPrice } from '@/lib/utils'
+import { formatPrice, localTodayISO } from '@/lib/utils'
 import { Card } from '@/components/ui/card'
 
 export function StatCards() {
   const t = useTranslations('dashboard')
   const { students, attendance } = useAppStore()
   const { year, month } = usePeriodStore()
-  const todayISO = new Date().toISOString().slice(0, 10)
+  const todayISO = localTodayISO()
 
   const cards = [
     { label: t('students'), value: String(students.length) },

@@ -47,14 +47,20 @@ export function StudentTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {rows.map((s) => (
-            <TableRow key={s.id}>
-              <TableCell className="font-medium">{s.fullName}</TableCell>
-              <TableCell>{s.className}</TableCell>
-              <TableCell className="text-center">{countSessions(s.id, attendance, year, month)}</TableCell>
-              <TableCell className="text-right">{formatPrice(monthlyFee(s, attendance, year, month))}</TableCell>
+          {rows.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={4} className="text-center text-gray-500 py-8">{t('noResults')}</TableCell>
             </TableRow>
-          ))}
+          ) : (
+            rows.map((s) => (
+              <TableRow key={s.id}>
+                <TableCell className="font-medium">{s.fullName}</TableCell>
+                <TableCell>{s.className}</TableCell>
+                <TableCell className="text-center">{countSessions(s.id, attendance, year, month)}</TableCell>
+                <TableCell className="text-right">{formatPrice(monthlyFee(s, attendance, year, month))}</TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>

@@ -6,6 +6,7 @@
     "viewTodayAttendance": "Xem điểm danh hôm nay",
     "colStudent": "HỌC SINH", "colClass": "LỚP", "colAttendance": "ĐIỂM DANH", "colSessions": "BUỔI", "colFee": "HỌC PHÍ THÁNG",
     "empty": "Chưa có học sinh. Hãy thêm học sinh để bắt đầu.",
+    "noResults": "Không tìm thấy học sinh phù hợp",
     "allClasses": "Tất cả lớp", "searchPlaceholder": "🔍 Tìm học sinh..."
   },
   "students": {
