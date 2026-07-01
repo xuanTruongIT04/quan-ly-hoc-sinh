@@ -16,6 +16,7 @@ export function ImportExportButtons() {
     if (!file) return
     try {
       const data = parseImportedJson(await file.text())
+      if (!window.confirm('Nhập dữ liệu này sẽ THAY TOÀN BỘ học sinh và điểm danh hiện tại. Tiếp tục?')) return
       replaceAll(data)
       toast.success(t('imported'))
     } catch {

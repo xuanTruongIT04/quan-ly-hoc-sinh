@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
@@ -36,6 +36,24 @@ export function StudentForm({ editing, trigger }: { editing?: Student; trigger: 
     startDate: editing?.startDate ?? localTodayISO(),
     sortOrder: editing?.sortOrder ?? 999,
   })
+
+  useEffect(() => {
+    if (open) {
+      const newForm = {
+        fullName: editing?.fullName ?? '',
+        className: editing?.className ?? '',
+        feeMode: (editing?.feeMode ?? 'per_session') as FeeMode,
+        fee: editing?.fee ?? CONFIG.defaultFee,
+        fee2: editing?.fee2 ?? 0,
+        startDate: editing?.startDate ?? localTodayISO(),
+        sortOrder: editing?.sortOrder ?? 999,
+      }
+      if (JSON.stringify(form) !== JSON.stringify(newForm)) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setForm(newForm)
+      }
+    }
+  }, [open, editing, form])
 
   function submit() {
     const parsed = schema.safeParse(form)
