@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
 import { usePeriodStore } from '@/store/usePeriodStore'
-import { countSessions, monthlyFee } from '@/lib/fees'
+import { countSessions, monthlyFee, classSessionsInMonth } from '@/lib/fees'
 import { formatPrice } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -42,6 +42,7 @@ export function StudentTable() {
           <TableRow>
             <TableHead>{t('colStudent')}</TableHead>
             <TableHead>{t('colClass')}</TableHead>
+            <TableHead className="text-center">{t('colAttendance')}</TableHead>
             <TableHead className="text-center">{t('colSessions')}</TableHead>
             <TableHead className="text-right">{t('colFee')}</TableHead>
           </TableRow>
@@ -49,13 +50,16 @@ export function StudentTable() {
         <TableBody>
           {rows.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="text-center text-gray-500 py-8">{t('noResults')}</TableCell>
+              <TableCell colSpan={5} className="text-center text-gray-500 py-8">{t('noResults')}</TableCell>
             </TableRow>
           ) : (
             rows.map((s) => (
               <TableRow key={s.id}>
                 <TableCell className="font-medium">{s.fullName}</TableCell>
                 <TableCell>{s.className}</TableCell>
+                <TableCell className="text-center">
+                  {countSessions(s.id, attendance, year, month)}/{classSessionsInMonth(s.className, students, attendance, year, month)}
+                </TableCell>
                 <TableCell className="text-center">{countSessions(s.id, attendance, year, month)}</TableCell>
                 <TableCell className="text-right">{formatPrice(monthlyFee(s, attendance, year, month))}</TableCell>
               </TableRow>

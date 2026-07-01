@@ -30,6 +30,18 @@ export function revenueForYear(
   return total
 }
 
+export function classSessionsInMonth(
+  className: string, students: Student[], attendance: AttendanceRecord[], year: number, month: number,
+): number {
+  const idsInClass = new Set(students.filter((s) => s.className === className).map((s) => s.id))
+  const dates = new Set(
+    attendance
+      .filter((a) => idsInClass.has(a.studentId) && isInMonth(a.date, year, month))
+      .map((a) => a.date),
+  )
+  return dates.size
+}
+
 export function revenueForDay(
   students: Student[], attendance: AttendanceRecord[], dateISO: string,
 ): number {

@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 
 export function BulkImportDialog() {
   const t = useTranslations('students')
+  const tc = useTranslations('common')
   const { addStudentsBulk } = useAppStore()
   const [open, setOpen] = useState(false)
   const [text, setText] = useState('')
@@ -46,8 +47,8 @@ export function BulkImportDialog() {
           onChange={(e) => setText(e.target.value)}
         />
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Hủy</Button>
-          <Button onClick={submit}>Lưu</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>{tc('cancel')}</Button>
+          <Button onClick={submit}>{tc('save')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

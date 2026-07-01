@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 // Điểm danh hàng loạt: nhập nhiều ngày (mỗi dòng 1 ngày yyyy-mm-dd), đánh 'present' cho cả lớp.
 export function BulkAttendanceDialog({ className, studentIds }: { className: string; studentIds: string[] }) {
   const t = useTranslations('attendance')
+  const tc = useTranslations('common')
   const { markClassPresent } = useAppStore()
   const [open, setOpen] = useState(false)
   const [text, setText] = useState('')
@@ -34,8 +35,8 @@ export function BulkAttendanceDialog({ className, studentIds }: { className: str
           onChange={(e) => setText(e.target.value)}
         />
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Hủy</Button>
-          <Button onClick={submit}>Lưu</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>{tc('cancel')}</Button>
+          <Button onClick={submit}>{tc('save')}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -20,7 +20,10 @@ export function AttendanceBoard() {
     return <div className="rounded-lg border p-8 text-center text-gray-500">{t('noClass')}</div>
   }
 
-  const inClass = students.filter((s) => s.className === cls).sort((a, b) => a.sortOrder - b.sortOrder)
+  const inClass = students
+    .filter((s) => s.className === cls)
+    .filter((s) => date >= s.startDate)
+    .sort((a, b) => a.sortOrder - b.sortOrder)
   const statusOf = (id: string) => attendance.find((a) => a.studentId === id && a.date === date)?.status
 
   return (
