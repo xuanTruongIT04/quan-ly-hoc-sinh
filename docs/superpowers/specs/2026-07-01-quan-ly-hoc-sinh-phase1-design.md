@@ -134,7 +134,8 @@ interface AttendanceRecord {
 - **Xóa HS:** xác nhận; xóa kèm bản ghi điểm danh liên quan.
 - **Rỗng:** màn hướng dẫn thêm học sinh.
 
-## 7. Ngoài phạm vi Phase 1
+## 7. Ngoài phạm vi Phase 1 (hoãn sang phase sau — đích cuối vẫn là FULL)
 
-Phiếu học phí (html2canvas → ảnh), VietQR, nhận xét tháng, lịch dạy, thống kê nâng cao, đa người dùng,
-DB/API thật, ghi file tự động.
+- **Phase 2:** phiếu học phí (html2canvas → ảnh), VietQR, nhận xét tháng.
+- **Phase 3:** lịch dạy + điểm danh giáo viên, 5 theme, thống kê/biểu đồ (Chart.js).
+- **Không bao giờ làm:** đa người dùng, DB/API thật, ghi file tự động (giữ localStorage + Export/Import JSON).
