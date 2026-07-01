@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { useAppStore } from './useAppStore'
+import type { Student } from '@/types'
 
 beforeEach(() => {
   useAppStore.setState({ students: [], attendance: [] })
@@ -69,7 +70,7 @@ describe('useAppStore', () => {
     expect(useAppStore.getState().students).toHaveLength(2)
 
     // Thay toàn bộ bằng 1 student mới
-    const newStudent: any = { id: 's_new123', fullName: 'C', className: 'L2', feeMode: 'per_session', fee: 2000, startDate: '2026-07-01', sortOrder: 1 }
+    const newStudent: Student = { id: 's_new123', fullName: 'C', className: 'L2', feeMode: 'per_session', fee: 2000, startDate: '2026-07-01', sortOrder: 1 }
     st.replaceAll({ students: [newStudent], attendance: [] })
 
     expect(useAppStore.getState().students).toHaveLength(1)
@@ -97,10 +98,10 @@ describe('useAppStore', () => {
 
   it('addStudentsBulk thêm nhiều học sinh, mỗi cái được sinh id', () => {
     const st = useAppStore.getState()
-    const newStudents = [
+    const newStudents: Omit<Student, 'id'>[] = [
       { fullName: 'D', className: 'L1', feeMode: 'per_session', fee: 1000, startDate: '2026-07-01', sortOrder: 1 },
       { fullName: 'E', className: 'L2', feeMode: 'per_session', fee: 1500, startDate: '2026-07-01', sortOrder: 2 }
-    ] as any[]
+    ]
 
     st.addStudentsBulk(newStudents)
 
