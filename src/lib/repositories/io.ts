@@ -24,8 +24,12 @@ export const appDataSchema = z.object({
 })
 
 export function parseImportedJson(text: string): AppData {
-  const obj = JSON.parse(text) // ném SyntaxError nếu sai cú pháp
-  return appDataSchema.parse(obj) // ném ZodError nếu sai cấu trúc
+  try {
+    const obj = JSON.parse(text)
+    return appDataSchema.parse(obj)
+  } catch (e) {
+    throw new Error(`File không hợp lệ: ${e instanceof Error ? e.message : String(e)}`)
+  }
 }
 
 export function exportJson(data: AppData): void {
