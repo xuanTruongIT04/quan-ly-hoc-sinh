@@ -6,8 +6,10 @@ import { usePeriodStore } from '@/store/usePeriodStore'
 import { countSessions, monthlyFee, classSessionsInMonth } from '@/lib/fees'
 import { formatPrice } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { ReceiptDialog } from '@/components/receipt/ReceiptDialog'
 
 export function StudentTable() {
   const t = useTranslations('dashboard')
@@ -45,12 +47,13 @@ export function StudentTable() {
             <TableHead className="text-center">{t('colAttendance')}</TableHead>
             <TableHead className="text-center">{t('colSessions')}</TableHead>
             <TableHead className="text-right">{t('colFee')}</TableHead>
+            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {rows.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={5} className="text-center text-gray-500 py-8">{t('noResults')}</TableCell>
+              <TableCell colSpan={6} className="text-center text-gray-500 py-8">{t('noResults')}</TableCell>
             </TableRow>
           ) : (
             rows.map((s) => (
@@ -62,6 +65,14 @@ export function StudentTable() {
                 </TableCell>
                 <TableCell className="text-center">{countSessions(s.id, attendance, year, month)}</TableCell>
                 <TableCell className="text-right">{formatPrice(monthlyFee(s, attendance, year, month))}</TableCell>
+                <TableCell className="text-right">
+                  <ReceiptDialog
+                    studentId={s.id}
+                    defaultYear={year}
+                    defaultMonth={month}
+                    trigger={<Button size="sm" variant="outline">🧾 Phiếu</Button>}
+                  />
+                </TableCell>
               </TableRow>
             ))
           )}

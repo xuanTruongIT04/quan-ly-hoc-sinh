@@ -3,16 +3,21 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
-import { formatPrice } from '@/lib/utils'
+import { formatPrice, localTodayISO } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { StudentForm } from './StudentForm'
+import { ReceiptDialog } from '@/components/receipt/ReceiptDialog'
 
 export function StudentList() {
   const t = useTranslations('students')
   const { students, removeStudent, classNames } = useAppStore()
+  const [curYear, curMonth] = (() => {
+    const [y, m] = localTodayISO().split('-')
+    return [Number(y), Number(m)]
+  })()
   const [q, setQ] = useState('')
   const [cls, setCls] = useState('__all__')
   const rows = students
@@ -58,6 +63,12 @@ export function StudentList() {
               <TableCell className="text-right">{formatPrice(s.fee)}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
+                  <ReceiptDialog
+                    studentId={s.id}
+                    defaultYear={curYear}
+                    defaultMonth={curMonth}
+                    trigger={<Button variant="outline" size="sm">🧾 Phiếu</Button>}
+                  />
                   <StudentForm editing={s} trigger={<Button variant="outline" size="sm">{t('edit')}</Button>} />
                   <Button variant="destructive" size="sm" onClick={() => onDelete(s.id)}>{t('delete')}</Button>
                 </div>
