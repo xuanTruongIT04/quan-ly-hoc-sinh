@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import type { AppData, Student, AttendanceRecord } from '@/types'
+import { commentKey } from '@/types'
 import { STORAGE_KEY } from '@/lib/repositories/storage'
 import { SEED_DATA } from '@/data/students'
 
@@ -9,6 +10,7 @@ function genId(): string {
 }
 
 interface AppState extends AppData {
+  comments: Record<string, string>
   addStudent: (s: Omit<Student, 'id'>) => void
   updateStudent: (id: string, patch: Partial<Student>) => void
   removeStudent: (id: string) => void
@@ -17,6 +19,8 @@ interface AppState extends AppData {
   markClassPresent: (studentIds: string[], date: string) => void
   replaceAll: (data: AppData) => void
   classNames: () => string[]
+  setComment: (studentId: string, year: number, month: number, text: string) => void
+  getComment: (studentId: string, year: number, month: number) => string
 }
 
 export const useAppStore = create<AppState>()(
@@ -24,6 +28,7 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       students: SEED_DATA.students,
       attendance: SEED_DATA.attendance,
+      comments: {},
 
       addStudent: (s) => set((st) => ({ students: [...st.students, { ...s, id: genId() }] })),
 
@@ -55,11 +60,16 @@ export const useAppStore = create<AppState>()(
       replaceAll: (data) => set({ students: data.students, attendance: data.attendance }),
 
       classNames: () => Array.from(new Set(get().students.map((s) => s.className))).filter(Boolean),
+
+      setComment: (studentId, year, month, text) =>
+        set((st) => ({ comments: { ...st.comments, [commentKey(studentId, year, month)]: text } })),
+
+      getComment: (studentId, year, month) => get().comments[commentKey(studentId, year, month)] ?? '',
     }),
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
-      partialize: (s) => ({ students: s.students, attendance: s.attendance }),
+      partialize: (s) => ({ students: s.students, attendance: s.attendance, comments: s.comments }),
     },
   ),
 )

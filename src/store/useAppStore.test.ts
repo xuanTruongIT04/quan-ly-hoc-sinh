@@ -114,3 +114,22 @@ describe('useAppStore', () => {
     expect(students[1].fullName).toBe('E')
   })
 })
+
+describe('comments', () => {
+  beforeEach(() => useAppStore.setState({ comments: {} }))
+
+  it('setComment rồi getComment trả đúng theo studentId + tháng', () => {
+    useAppStore.getState().setComment('s1', 2026, 7, 'Bé tiến bộ')
+    expect(useAppStore.getState().getComment('s1', 2026, 7)).toBe('Bé tiến bộ')
+  })
+  it('getComment trả chuỗi rỗng khi chưa có', () => {
+    expect(useAppStore.getState().getComment('s1', 2026, 9)).toBe('')
+  })
+  it('nhận xét tách biệt theo tháng', () => {
+    const st = useAppStore.getState()
+    st.setComment('s1', 2026, 7, 'Tháng 7')
+    st.setComment('s1', 2026, 8, 'Tháng 8')
+    expect(useAppStore.getState().getComment('s1', 2026, 7)).toBe('Tháng 7')
+    expect(useAppStore.getState().getComment('s1', 2026, 8)).toBe('Tháng 8')
+  })
+})
