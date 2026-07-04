@@ -24,5 +24,12 @@
     "present": "Có", "absent": "Vắng", "markAllPresent": "Cả lớp Có", "bulk": "Điểm danh hàng loạt",
     "noClass": "Chưa có lớp. Hãy thêm học sinh trước.", "saved": "Đã điểm danh"
   },
+  "receipt": {
+    "title": "PHIẾU HỌC PHÍ", "month": "Tháng", "student": "Học sinh",
+    "feePerSession": "Học phí / buổi", "sessions": "Số buổi học", "total": "TỔNG HỌC PHÍ",
+    "attendedDates": "NGÀY ĐI HỌC", "comment": "NHẬN XÉT", "sessionUnit": "buổi",
+    "open": "Phiếu", "saveComment": "Lưu nhận xét", "download": "📥 Tải phiếu",
+    "commentPlaceholder": "Viết lời nhắn học tập...", "notConfigured": "Chưa cấu hình tài khoản ngân hàng"
+  },
   "common": { "cancel": "Hủy", "save": "Lưu", "close": "Đóng" }
 }
