@@ -38,4 +38,39 @@ describe('buildVietQrPayload', () => {
     expect(p.startsWith('000201010211')).toBe(true)
     expect(p).not.toContain('5406')
   })
+
+  it('addInfo dài ≥ 100 ký tự: bị truncate ≤ 90 ký tự (không ném lỗi), CRC hợp lệ', () => {
+    const longInfo = 'x'.repeat(200)
+    const p = buildVietQrPayload({ bin: '970418', accountNumber: '123', addInfo: longInfo })
+    // Kiểm tra CRC hợp lệ
+    const withoutCrc = p.slice(0, -4)
+    expect(withoutCrc.endsWith('6304')).toBe(true)
+    expect(p.slice(-4)).toBe(crc16Ccitt(withoutCrc))
+    // Kiểm tra không chứa toàn bộ input (vì truncate)
+    expect(p).not.toContain('x'.repeat(91))
+  })
+
+  it('amount âm: POI = 010211 (static), KHÔNG chứa field 54, CRC hợp lệ', () => {
+    const p = buildVietQrPayload({ bin: '970418', accountNumber: '123', amount: -5 })
+    expect(p.startsWith('000201010211')).toBe(true)
+    expect(p).not.toContain('54')
+    const withoutCrc = p.slice(0, -4)
+    expect(p.slice(-4)).toBe(crc16Ccitt(withoutCrc))
+  })
+
+  it('amount NaN: POI = 010211 (static), KHÔNG chứa field 54, CRC hợp lệ', () => {
+    const p = buildVietQrPayload({ bin: '970418', accountNumber: '123', amount: NaN })
+    expect(p.startsWith('000201010211')).toBe(true)
+    expect(p).not.toContain('54')
+    const withoutCrc = p.slice(0, -4)
+    expect(p.slice(-4)).toBe(crc16Ccitt(withoutCrc))
+  })
+
+  it('amount vô hạn (Infinity): POI = 010211 (static), KHÔNG chứa field 54, CRC hợp lệ', () => {
+    const p = buildVietQrPayload({ bin: '970418', accountNumber: '123', amount: Infinity })
+    expect(p.startsWith('000201010211')).toBe(true)
+    expect(p).not.toContain('54')
+    const withoutCrc = p.slice(0, -4)
+    expect(p.slice(-4)).toBe(crc16Ccitt(withoutCrc))
+  })
 })

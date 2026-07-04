@@ -1,6 +1,9 @@
 // Xây payload QR chuyển khoản theo chuẩn EMVCo / VietQR (NAPAS).
 
 function tlv(tag: string, value: string): string {
+  if (value.length > 99) {
+    throw new Error(`TLV value quá dài (${value.length} > 99) cho tag ${tag}`)
+  }
   const len = String(value.length).padStart(2, '0')
   return `${tag}${len}${value}`
 }
@@ -26,6 +29,12 @@ export function buildVietQrPayload(args: {
 }): string {
   const { bin, accountNumber, amount, addInfo } = args
 
+  // Validate amount: must be non-negative finite number if present
+  const hasAmount = amount != null && Number.isFinite(amount) && amount >= 0
+
+  // Truncate addInfo để tránh TLV length overflow
+  const safeAddInfo = addInfo ? addInfo.slice(0, 90) : addInfo
+
   // Field 38 — Merchant Account Information (lồng)
   const beneficiary = tlv('00', bin) + tlv('01', accountNumber)
   const merchantAccount =
@@ -33,14 +42,14 @@ export function buildVietQrPayload(args: {
 
   let payload =
     tlv('00', '01') + // Payload Format Indicator
-    tlv('01', amount != null ? '12' : '11') + // POI: 12 dynamic, 11 static
+    tlv('01', hasAmount ? '12' : '11') + // POI: 12 dynamic, 11 static
     tlv('38', merchantAccount) +
     tlv('53', '704') // currency VND
 
-  if (amount != null) payload += tlv('54', String(Math.round(amount)))
+  if (hasAmount) payload += tlv('54', String(Math.round(amount!)))
   payload += tlv('58', 'VN') // country
 
-  if (addInfo) payload += tlv('62', tlv('08', addInfo)) // Additional Data → Purpose
+  if (safeAddInfo) payload += tlv('62', tlv('08', safeAddInfo)) // Additional Data → Purpose
 
   payload += '6304' // CRC tag + length
   payload += crc16Ccitt(payload)
