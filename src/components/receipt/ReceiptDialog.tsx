@@ -1,6 +1,6 @@
 'use client'
 import { useRef, useState } from 'react'
-import html2canvas from 'html2canvas'
+import html2canvas from 'html2canvas-pro'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
@@ -55,11 +55,16 @@ export function ReceiptDialog({
 
   async function download() {
     if (!cardRef.current) return
-    const canvas = await html2canvas(cardRef.current, { backgroundColor: null, scale: 2 })
-    const link = document.createElement('a')
-    link.download = `phieu-hoc-phi-${student?.fullName ?? 'hs'}-${year}-${String(month).padStart(2, '0')}.png`
-    link.href = canvas.toDataURL('image/png')
-    link.click()
+    try {
+      const canvas = await html2canvas(cardRef.current, { backgroundColor: null, scale: 2 })
+      const link = document.createElement('a')
+      link.download = `phieu-hoc-phi-${student?.fullName ?? 'hs'}-${year}-${String(month).padStart(2, '0')}.png`
+      link.href = canvas.toDataURL('image/png')
+      link.click()
+    } catch (error) {
+      console.error(error)
+      toast.error('Không tạo được ảnh phiếu')
+    }
   }
 
   return (

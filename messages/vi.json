@@ -26,7 +26,8 @@
   },
   "receipt": {
     "title": "PHIẾU HỌC PHÍ", "month": "Tháng", "student": "Học sinh",
-    "feePerSession": "Học phí / buổi", "sessions": "Số buổi học", "total": "TỔNG HỌC PHÍ",
+    "feePerSession": "Học phí / buổi", "feeFixed": "Học phí cố định / tháng",
+    "sessions": "Số buổi học", "total": "TỔNG HỌC PHÍ",
     "attendedDates": "NGÀY ĐI HỌC", "comment": "NHẬN XÉT", "sessionUnit": "buổi",
     "open": "Phiếu", "saveComment": "Lưu nhận xét", "download": "📥 Tải phiếu",
     "commentPlaceholder": "Viết lời nhắn học tập...", "notConfigured": "Chưa cấu hình tài khoản ngân hàng"

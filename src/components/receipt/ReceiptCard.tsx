@@ -1,5 +1,6 @@
 'use client'
 import { forwardRef } from 'react'
+import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
 import { countSessions, monthlyFee } from '@/lib/fees'
 import { formatPrice, isInMonth } from '@/lib/utils'
@@ -16,6 +17,7 @@ export const ReceiptCard = forwardRef<
   HTMLDivElement,
   { studentId: string; year: number; month: number; comment: string }
 >(function ReceiptCard({ studentId, year, month, comment }, ref) {
+  const t = useTranslations('receipt')
   const { students, attendance } = useAppStore()
   const student = students.find((s) => s.id === studentId)
   if (!student) return null
@@ -35,32 +37,34 @@ export const ReceiptCard = forwardRef<
     >
       <div className="text-center">
         <div className="text-xs font-semibold text-purple-500">{CONFIG.schoolName}</div>
-        <h2 className="text-lg font-extrabold text-pink-600">🧾 PHIẾU HỌC PHÍ</h2>
+        <h2 className="text-lg font-extrabold text-pink-600">🧾 {t('title')}</h2>
         <div className="text-xs text-gray-500">
-          Tháng {month}/{year}
+          {t('month')} {month}/{year}
         </div>
       </div>
       <div className="mt-3 space-y-1">
         <div className="flex justify-between">
-          <span>👨‍🎓 Học sinh</span>
+          <span>👨‍🎓 {t('student')}</span>
           <span className="font-semibold">{student.fullName}</span>
         </div>
         <div className="flex justify-between">
-          <span>💎 Học phí / buổi</span>
+          <span>💎 {student.feeMode === 'fixed_monthly' ? t('feeFixed') : t('feePerSession')}</span>
           <span>{formatPrice(student.fee)}</span>
         </div>
         <div className="flex justify-between">
-          <span>📝 Số buổi học</span>
-          <span>{sessions} buổi</span>
+          <span>📝 {t('sessions')}</span>
+          <span>
+            {sessions} {t('sessionUnit')}
+          </span>
         </div>
       </div>
       <div className="mt-3 rounded-xl bg-white/70 p-3 text-center">
-        <div className="text-xs text-gray-500">TỔNG HỌC PHÍ</div>
+        <div className="text-xs text-gray-500">{t('total')}</div>
         <div className="text-2xl font-extrabold text-pink-600">{formatPrice(total)}</div>
       </div>
       {dates.length > 0 && (
         <div className="mt-3">
-          <div className="text-xs font-semibold text-gray-500">NGÀY ĐI HỌC</div>
+          <div className="text-xs font-semibold text-gray-500">{t('attendedDates')}</div>
           <div className="mt-1 flex flex-wrap gap-1">
             {dates.map((d) => (
               <span key={d} className="rounded bg-purple-100 px-2 py-0.5 text-xs">
@@ -71,7 +75,7 @@ export const ReceiptCard = forwardRef<
         </div>
       )}
       <div className="mt-3 border-t border-dashed border-pink-200 pt-2 text-center">
-        <div className="text-xs font-semibold text-gray-500">— NHẬN XÉT —</div>
+        <div className="text-xs font-semibold text-gray-500">— {t('comment')} —</div>
         {comment && <div className="mt-1 italic">{comment}</div>}
         <div className="mt-1 text-xs text-pink-500">{CONFIG.receiptGreeting}</div>
       </div>
