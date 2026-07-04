@@ -21,3 +21,13 @@ export interface AppData {
   students: Student[]
   attendance: AttendanceRecord[]
 }
+
+export interface BankConfig {
+  bankCode: string       // key tra napas-banks (VD 'BIDV'); '' = chưa cấu hình
+  accountNumber: string  // '' = chưa cấu hình
+  accountName: string
+}
+
+export function commentKey(studentId: string, year: number, month: number): string {
+  return `${studentId}:${year}-${String(month).padStart(2, '0')}`
+}
