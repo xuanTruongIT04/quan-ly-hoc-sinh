@@ -4,6 +4,7 @@ import type { AppData, Student, AttendanceRecord } from '@/types'
 import { commentKey } from '@/types'
 import { STORAGE_KEY } from '@/lib/repositories/storage'
 import { SEED_DATA } from '@/data/students'
+import type { ThemeId } from '@/lib/receipt-themes'
 
 function genId(): string {
   return 's_' + Math.random().toString(36).slice(2, 10)
@@ -21,6 +22,8 @@ interface AppState extends AppData {
   classNames: () => string[]
   setComment: (studentId: string, year: number, month: number, text: string) => void
   getComment: (studentId: string, year: number, month: number) => string
+  receiptTheme: ThemeId
+  setReceiptTheme: (id: ThemeId) => void
 }
 
 export const useAppStore = create<AppState>()(
@@ -65,11 +68,14 @@ export const useAppStore = create<AppState>()(
         set((st) => ({ comments: { ...st.comments, [commentKey(studentId, year, month)]: text } })),
 
       getComment: (studentId, year, month) => get().comments[commentKey(studentId, year, month)] ?? '',
+
+      receiptTheme: 'strawberry',
+      setReceiptTheme: (id) => set({ receiptTheme: id }),
     }),
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
-      partialize: (s) => ({ students: s.students, attendance: s.attendance, comments: s.comments }),
+      partialize: (s) => ({ students: s.students, attendance: s.attendance, comments: s.comments, receiptTheme: s.receiptTheme }),
     },
   ),
 )

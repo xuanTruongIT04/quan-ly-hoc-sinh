@@ -133,3 +133,15 @@ describe('comments', () => {
     expect(useAppStore.getState().getComment('s1', 2026, 8)).toBe('Tháng 8')
   })
 })
+
+describe('receiptTheme', () => {
+  it('mặc định là strawberry', () => {
+    // reset về mặc định
+    useAppStore.setState({ receiptTheme: 'strawberry' })
+    expect(useAppStore.getState().receiptTheme).toBe('strawberry')
+  })
+  it('setReceiptTheme đổi theme', () => {
+    useAppStore.getState().setReceiptTheme('ocean')
+    expect(useAppStore.getState().receiptTheme).toBe('ocean')
+  })
+})
