@@ -31,3 +31,8 @@ export interface BankConfig {
 export function commentKey(studentId: string, year: number, month: number): string {
   return `${studentId}:${year}-${String(month).padStart(2, '0')}`
 }
+
+export interface ExtraFee {
+  amount: number   // VND, KHÔNG chia 100
+  note: string     // ghi chú tùy chọn, '' nếu không có
+}

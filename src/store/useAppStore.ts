@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import type { AppData, Student, AttendanceRecord } from '@/types'
+import type { AppData, Student, AttendanceRecord, ExtraFee } from '@/types'
 import { commentKey } from '@/types'
 import { STORAGE_KEY } from '@/lib/repositories/storage'
 import { SEED_DATA } from '@/data/students'
@@ -24,6 +24,12 @@ interface AppState extends AppData {
   getComment: (studentId: string, year: number, month: number) => string
   receiptTheme: ThemeId
   setReceiptTheme: (id: ThemeId) => void
+  extraFees: Record<string, ExtraFee>
+  payments: Record<string, boolean>
+  setExtraFee: (studentId: string, year: number, month: number, amount: number, note: string) => void
+  getExtraFee: (studentId: string, year: number, month: number) => ExtraFee
+  setPaid: (studentId: string, year: number, month: number, paid: boolean) => void
+  isPaid: (studentId: string, year: number, month: number) => boolean
 }
 
 export const useAppStore = create<AppState>()(
@@ -71,11 +77,21 @@ export const useAppStore = create<AppState>()(
 
       receiptTheme: 'strawberry',
       setReceiptTheme: (id) => set({ receiptTheme: id }),
+
+      extraFees: {},
+      payments: {},
+      setExtraFee: (studentId, year, month, amount, note) =>
+        set((st) => ({ extraFees: { ...st.extraFees, [commentKey(studentId, year, month)]: { amount, note } } })),
+      getExtraFee: (studentId, year, month) =>
+        get().extraFees[commentKey(studentId, year, month)] ?? { amount: 0, note: '' },
+      setPaid: (studentId, year, month, paid) =>
+        set((st) => ({ payments: { ...st.payments, [commentKey(studentId, year, month)]: paid } })),
+      isPaid: (studentId, year, month) => get().payments[commentKey(studentId, year, month)] ?? false,
     }),
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
-      partialize: (s) => ({ students: s.students, attendance: s.attendance, comments: s.comments, receiptTheme: s.receiptTheme }),
+      partialize: (s) => ({ students: s.students, attendance: s.attendance, comments: s.comments, receiptTheme: s.receiptTheme, extraFees: s.extraFees, payments: s.payments }),
     },
   ),
 )

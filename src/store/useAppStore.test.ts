@@ -145,3 +145,28 @@ describe('receiptTheme', () => {
     expect(useAppStore.getState().receiptTheme).toBe('ocean')
   })
 })
+
+describe('extraFees + payments', () => {
+  beforeEach(() => useAppStore.setState({ extraFees: {}, payments: {} }))
+
+  it('setExtraFee rồi getExtraFee trả đúng số + note theo tháng', () => {
+    useAppStore.getState().setExtraFee('s1', 2026, 7, 50000, 'Tiền sách')
+    expect(useAppStore.getState().getExtraFee('s1', 2026, 7)).toEqual({ amount: 50000, note: 'Tiền sách' })
+  })
+  it('getExtraFee mặc định {amount:0, note:""} khi chưa có', () => {
+    expect(useAppStore.getState().getExtraFee('s1', 2026, 9)).toEqual({ amount: 0, note: '' })
+  })
+  it('phụ phí tách biệt theo tháng', () => {
+    const st = useAppStore.getState()
+    st.setExtraFee('s1', 2026, 7, 50000, 'T7')
+    st.setExtraFee('s1', 2026, 8, 30000, 'T8')
+    expect(useAppStore.getState().getExtraFee('s1', 2026, 7).amount).toBe(50000)
+    expect(useAppStore.getState().getExtraFee('s1', 2026, 8).amount).toBe(30000)
+  })
+  it('setPaid/isPaid theo tháng, mặc định false', () => {
+    expect(useAppStore.getState().isPaid('s1', 2026, 7)).toBe(false)
+    useAppStore.getState().setPaid('s1', 2026, 7, true)
+    expect(useAppStore.getState().isPaid('s1', 2026, 7)).toBe(true)
+    expect(useAppStore.getState().isPaid('s1', 2026, 8)).toBe(false)
+  })
+})
