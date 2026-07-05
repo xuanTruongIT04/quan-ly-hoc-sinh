@@ -33,7 +33,7 @@ export function BatchReceiptExport({
   label: string
 }) {
   const t = useTranslations('receipt')
-  const { students, receiptTheme, getComment } = useAppStore()
+  const { students, receiptTheme, getComment, getExtraFee, isPaid } = useAppStore()
   const [busy, setBusy] = useState(false)
   const [currentId, setCurrentId] = useState<string | null>(null)
   const hiddenRef = useRef<HTMLDivElement>(null)
@@ -90,6 +90,8 @@ export function BatchReceiptExport({
               month={month}
               comment={getComment(currentId, year, month)}
               theme={theme}
+              extraFee={getExtraFee(currentId, year, month)}
+              paid={isPaid(currentId, year, month)}
               onQrReady={() => qrReadyRef.current?.()}
             />
           </div>

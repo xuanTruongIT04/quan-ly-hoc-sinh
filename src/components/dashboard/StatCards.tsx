@@ -8,14 +8,14 @@ import { Card } from '@/components/ui/card'
 
 export function StatCards() {
   const t = useTranslations('dashboard')
-  const { students, attendance } = useAppStore()
+  const { students, attendance, extraFees } = useAppStore()
   const { year, month } = usePeriodStore()
   const todayISO = localTodayISO()
 
   const cards = [
     { label: t('students'), value: String(students.length) },
-    { label: t('totalYear'), value: formatPrice(revenueForYear(students, attendance, year)) },
-    { label: t('thisMonth'), value: formatPrice(revenueForMonth(students, attendance, year, month)) },
+    { label: t('totalYear'), value: formatPrice(revenueForYear(students, attendance, year, extraFees)) },
+    { label: t('thisMonth'), value: formatPrice(revenueForMonth(students, attendance, year, month, extraFees)) },
     { label: t('today'), value: formatPrice(revenueForDay(students, attendance, todayISO)) },
   ]
   return (

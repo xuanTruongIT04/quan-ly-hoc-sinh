@@ -14,7 +14,7 @@ import { BatchReceiptExport } from '@/components/receipt/BatchReceiptExport'
 
 export function StudentTable() {
   const t = useTranslations('dashboard')
-  const { students, attendance, classNames } = useAppStore()
+  const { students, attendance, classNames, isPaid } = useAppStore()
   const { year, month } = usePeriodStore()
   const [q, setQ] = useState('')
   const [cls, setCls] = useState('__all__')
@@ -62,7 +62,12 @@ export function StudentTable() {
           ) : (
             rows.map((s) => (
               <TableRow key={s.id}>
-                <TableCell className="font-medium">{s.fullName}</TableCell>
+                <TableCell className="font-medium">
+                  {s.fullName}
+                  {!isPaid(s.id, year, month) && (
+                    <span className="ml-2 rounded bg-red-100 px-1.5 py-0.5 text-xs text-red-600">{t('debtBadge')}</span>
+                  )}
+                </TableCell>
                 <TableCell>{s.className}</TableCell>
                 <TableCell className="text-center">
                   {countSessions(s.id, attendance, year, month)}/{classSessionsInMonth(s.className, students, attendance, year, month)}

@@ -34,27 +34,45 @@ export function ReceiptDialog({
   trigger: React.ReactElement
 }) {
   const t = useTranslations('receipt')
-  const { students, setComment, getComment, receiptTheme } = useAppStore()
+  const { students, setComment, getComment, receiptTheme, setExtraFee, getExtraFee, setPaid, isPaid } = useAppStore()
   const theme = getTheme(receiptTheme)
   const [open, setOpen] = useState(false)
   const [year, setYear] = useState(defaultYear)
   const [month, setMonth] = useState(defaultMonth)
   const [comment, setLocalComment] = useState('')
+  const [feeAmount, setFeeAmount] = useState(0)
+  const [feeNote, setFeeNote] = useState('')
+  const [paidState, setPaidState] = useState(false)
   const cardRef = useRef<HTMLDivElement>(null)
   const student = students.find((s) => s.id === studentId)
 
-  function syncComment(y: number, m: number) {
+  function syncMonth(y: number, m: number) {
     setLocalComment(getComment(studentId, y, m))
+    const ef = getExtraFee(studentId, y, m)
+    setFeeAmount(ef.amount)
+    setFeeNote(ef.note)
+    setPaidState(isPaid(studentId, y, m))
   }
 
   function onOpenChange(o: boolean) {
     setOpen(o)
-    if (o) syncComment(year, month)
+    if (o) syncMonth(year, month)
   }
 
   function save() {
     setComment(studentId, year, month, comment)
     toast.success(t('saveComment'))
+  }
+
+  function saveExtraFee() {
+    setExtraFee(studentId, year, month, feeAmount, feeNote)
+    toast.success(t('saveExtraFee'))
+  }
+
+  function togglePaid() {
+    const next = !paidState
+    setPaidState(next)
+    setPaid(studentId, year, month, next)
   }
 
   async function download() {
@@ -86,7 +104,7 @@ export function ReceiptDialog({
             onValueChange={(v) => {
               if (v) {
                 setMonth(Number(v))
-                syncComment(year, Number(v))
+                syncMonth(year, Number(v))
               }
             }}
           >
@@ -106,7 +124,7 @@ export function ReceiptDialog({
             onValueChange={(v) => {
               if (v) {
                 setYear(Number(v))
-                syncComment(Number(v), month)
+                syncMonth(Number(v), month)
               }
             }}
           >
@@ -127,8 +145,39 @@ export function ReceiptDialog({
           <ThemePicker />
         </div>
         <div className="max-h-[60vh] overflow-auto py-2">
-          <ReceiptCard ref={cardRef} studentId={studentId} year={year} month={month} comment={comment} theme={theme} />
+          <ReceiptCard
+            ref={cardRef}
+            studentId={studentId}
+            year={year}
+            month={month}
+            comment={comment}
+            theme={theme}
+            extraFee={{ amount: feeAmount, note: feeNote }}
+            paid={paidState}
+          />
         </div>
+        <div className="flex flex-wrap gap-2">
+          <input
+            type="number"
+            className="w-32 rounded-md border p-2 text-sm"
+            placeholder={t('extraFeeLabel')}
+            value={feeAmount}
+            onChange={(e) => setFeeAmount(Number(e.target.value))}
+          />
+          <input
+            type="text"
+            className="flex-1 rounded-md border p-2 text-sm"
+            placeholder={t('extraFeeNote')}
+            value={feeNote}
+            onChange={(e) => setFeeNote(e.target.value)}
+          />
+          <Button variant="outline" onClick={saveExtraFee}>
+            💾 {t('saveExtraFee')}
+          </Button>
+        </div>
+        <Button variant={paidState ? 'default' : 'outline'} onClick={togglePaid}>
+          {paidState ? t('markUnpaid') : t('markPaid')}
+        </Button>
         <textarea
           className="min-h-16 w-full rounded-md border p-2 text-sm"
           placeholder={t('commentPlaceholder')}
