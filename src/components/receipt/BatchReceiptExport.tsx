@@ -37,6 +37,7 @@ export function BatchReceiptExport({
   const [busy, setBusy] = useState(false)
   const [currentId, setCurrentId] = useState<string | null>(null)
   const hiddenRef = useRef<HTMLDivElement>(null)
+  const qrReadyRef = useRef<(() => void) | null>(null)
   const theme = getTheme(receiptTheme)
 
   async function run() {
@@ -50,8 +51,12 @@ export function BatchReceiptExport({
     for (const id of ids) {
       const student = students.find((s) => s.id === id)
       try {
+        const qrReady = new Promise<void>((resolve) => {
+          qrReadyRef.current = resolve
+        })
         flushSync(() => setCurrentId(id))
-        await sleep(120) // chờ QR canvas vẽ xong
+        await Promise.race([qrReady, sleep(1500)]) // chờ QR canvas vẽ xong (tối đa 1.5s)
+        await sleep(50) // đệm nhỏ cho chắc
         if (hiddenRef.current) {
           const canvas = await html2canvas(hiddenRef.current, { backgroundColor: null, scale: 2 })
           const link = document.createElement('a')
@@ -59,11 +64,11 @@ export function BatchReceiptExport({
           link.href = canvas.toDataURL('image/png')
           link.click()
           done++
-          toast.success(`Đã tải ${done}/${ids.length} phiếu`)
+          toast.success(t('batchDone', { n: done, total: ids.length }))
         }
         await sleep(300) // tránh trình duyệt chặn multi-download
       } catch {
-        toast.error(`Lỗi tải phiếu của ${student?.fullName ?? id}`)
+        toast.error(t('batchError', { name: student?.fullName ?? id }))
       }
     }
     setCurrentId(null)
@@ -73,7 +78,7 @@ export function BatchReceiptExport({
   return (
     <>
       <Button variant="outline" size="sm" disabled={busy} onClick={run}>
-        {busy ? '⏳ Đang tải...' : label}
+        {busy ? t('batchBusy') : label}
       </Button>
       {/* container ẩn off-screen để chụp từng phiếu */}
       <div style={{ position: 'absolute', left: -9999, top: 0 }} aria-hidden>
@@ -85,6 +90,7 @@ export function BatchReceiptExport({
               month={month}
               comment={getComment(currentId, year, month)}
               theme={theme}
+              onQrReady={() => qrReadyRef.current?.()}
             />
           </div>
         )}

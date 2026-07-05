@@ -5,7 +5,15 @@ import { CONFIG } from '@/lib/config'
 import { getBank } from '@/lib/napas-banks'
 import { buildVietQrPayload } from '@/lib/vietqr'
 
-export function VietQrCode({ amount, addInfo }: { amount: number; addInfo: string }) {
+export function VietQrCode({
+  amount,
+  addInfo,
+  onReady,
+}: {
+  amount: number
+  addInfo: string
+  onReady?: () => void
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const bank = getBank(CONFIG.bank.bankCode)
   const configured = !!bank && !!CONFIG.bank.accountNumber
@@ -18,8 +26,15 @@ export function VietQrCode({ amount, addInfo }: { amount: number; addInfo: strin
       amount,
       addInfo,
     })
-    QRCode.toCanvas(canvasRef.current, payload, { width: 180, margin: 1 }).catch(() => {})
-  }, [configured, bank, amount, addInfo])
+    QRCode.toCanvas(canvasRef.current, payload, { width: 180, margin: 1 })
+      .then(() => onReady?.())
+      .catch(() => onReady?.())
+  }, [configured, bank, amount, addInfo, onReady])
+
+  useEffect(() => {
+    // Chưa cấu hình bank: không có QR để vẽ, báo ready ngay để không chặn batch export.
+    if (!configured) onReady?.()
+  }, [configured, onReady])
 
   if (!configured) {
     return (

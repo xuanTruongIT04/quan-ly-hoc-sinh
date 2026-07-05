@@ -16,8 +16,15 @@ function formatDdMm(iso: string): string {
 
 export const ReceiptCard = forwardRef<
   HTMLDivElement,
-  { studentId: string; year: number; month: number; comment: string; theme?: ReceiptTheme }
->(function ReceiptCard({ studentId, year, month, comment, theme }, ref) {
+  {
+    studentId: string
+    year: number
+    month: number
+    comment: string
+    theme?: ReceiptTheme
+    onQrReady?: () => void
+  }
+>(function ReceiptCard({ studentId, year, month, comment, theme, onQrReady }, ref) {
   const t = useTranslations('receipt')
   const { students, attendance } = useAppStore()
   const student = students.find((s) => s.id === studentId)
@@ -83,7 +90,7 @@ export const ReceiptCard = forwardRef<
         <div className={`mt-1 text-xs ${th.accentText}`}>{CONFIG.receiptGreeting}</div>
       </div>
       <div className="mt-3 flex flex-col items-center gap-1">
-        <VietQrCode amount={total} addInfo={`Hoc phi ${student.fullName}`} />
+        <VietQrCode amount={total} addInfo={`Hoc phi ${student.fullName}`} onReady={onQrReady} />
         {bank && CONFIG.bank.accountNumber && (
           <div className="text-center text-xs">
             <div>

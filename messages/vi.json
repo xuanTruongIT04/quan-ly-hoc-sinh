@@ -31,7 +31,8 @@
     "attendedDates": "NGÀY ĐI HỌC", "comment": "NHẬN XÉT", "sessionUnit": "buổi",
     "open": "Phiếu", "saveComment": "Lưu nhận xét", "download": "📥 Tải phiếu",
     "commentPlaceholder": "Viết lời nhắn học tập...", "notConfigured": "Chưa cấu hình tài khoản ngân hàng",
-    "theme": "Giao diện phiếu", "batchExport": "📥 Tải phiếu lớp", "batchEmpty": "Lớp không có học sinh"
+    "theme": "Giao diện phiếu", "batchExport": "📥 Tải phiếu lớp", "batchEmpty": "Lớp không có học sinh",
+    "batchDone": "Đã tải {n}/{total} phiếu", "batchError": "Lỗi tải phiếu của {name}", "batchBusy": "⏳ Đang tải..."
   },
   "common": { "cancel": "Hủy", "save": "Lưu", "close": "Đóng" }
 }
