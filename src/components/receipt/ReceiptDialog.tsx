@@ -4,7 +4,10 @@ import html2canvas from 'html2canvas-pro'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
+import { getTheme } from '@/lib/receipt-themes'
 import { ReceiptCard } from './ReceiptCard'
+import { ThemePicker } from './ThemePicker'
+import { BatchReceiptExport } from './BatchReceiptExport'
 import {
   Dialog,
   DialogContent,
@@ -31,7 +34,8 @@ export function ReceiptDialog({
   trigger: React.ReactElement
 }) {
   const t = useTranslations('receipt')
-  const { students, setComment, getComment } = useAppStore()
+  const { students, setComment, getComment, receiptTheme } = useAppStore()
+  const theme = getTheme(receiptTheme)
   const [open, setOpen] = useState(false)
   const [year, setYear] = useState(defaultYear)
   const [month, setMonth] = useState(defaultMonth)
@@ -118,8 +122,12 @@ export function ReceiptDialog({
             </SelectContent>
           </Select>
         </div>
+        <div>
+          <div className="mb-1 text-xs font-semibold text-gray-500">🎨 {t('theme')}</div>
+          <ThemePicker />
+        </div>
         <div className="max-h-[60vh] overflow-auto py-2">
-          <ReceiptCard ref={cardRef} studentId={studentId} year={year} month={month} comment={comment} />
+          <ReceiptCard ref={cardRef} studentId={studentId} year={year} month={month} comment={comment} theme={theme} />
         </div>
         <textarea
           className="min-h-16 w-full rounded-md border p-2 text-sm"
@@ -128,6 +136,12 @@ export function ReceiptDialog({
           onChange={(e) => setLocalComment(e.target.value)}
         />
         <DialogFooter>
+          <BatchReceiptExport
+            studentIds={students.filter((s) => s.className === student?.className).map((s) => s.id)}
+            year={year}
+            month={month}
+            label={t('batchExport')}
+          />
           <Button variant="outline" onClick={save}>
             ✨ {t('saveComment')}
           </Button>

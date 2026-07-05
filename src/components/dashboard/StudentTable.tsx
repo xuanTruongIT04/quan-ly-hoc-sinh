@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { ReceiptDialog } from '@/components/receipt/ReceiptDialog'
+import { BatchReceiptExport } from '@/components/receipt/BatchReceiptExport'
 
 export function StudentTable() {
   const t = useTranslations('dashboard')
@@ -38,6 +39,9 @@ export function StudentTable() {
             {classNames().map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
           </SelectContent>
         </Select>
+        {rows.length > 0 && (
+          <BatchReceiptExport studentIds={rows.map((s) => s.id)} year={year} month={month} label={t('batchReceipt')} />
+        )}
       </div>
       <Table>
         <TableHeader>
