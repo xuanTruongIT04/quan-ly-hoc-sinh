@@ -6,6 +6,7 @@ import { countSessions, monthlyFee } from '@/lib/fees'
 import { formatPrice, isInMonth } from '@/lib/utils'
 import { CONFIG } from '@/lib/config'
 import { getBank } from '@/lib/napas-banks'
+import { getTheme, type ReceiptTheme } from '@/lib/receipt-themes'
 import { VietQrCode } from './VietQrCode'
 
 function formatDdMm(iso: string): string {
@@ -15,12 +16,14 @@ function formatDdMm(iso: string): string {
 
 export const ReceiptCard = forwardRef<
   HTMLDivElement,
-  { studentId: string; year: number; month: number; comment: string }
->(function ReceiptCard({ studentId, year, month, comment }, ref) {
+  { studentId: string; year: number; month: number; comment: string; theme?: ReceiptTheme }
+>(function ReceiptCard({ studentId, year, month, comment, theme }, ref) {
   const t = useTranslations('receipt')
   const { students, attendance } = useAppStore()
   const student = students.find((s) => s.id === studentId)
   if (!student) return null
+
+  const th = theme ?? getTheme('strawberry')
 
   const sessions = countSessions(student.id, attendance, year, month)
   const total = monthlyFee(student, attendance, year, month)
@@ -33,12 +36,12 @@ export const ReceiptCard = forwardRef<
   return (
     <div
       ref={ref}
-      className="mx-auto w-[360px] rounded-2xl bg-gradient-to-b from-pink-50 to-purple-50 p-5 text-sm text-gray-700"
+      className={`mx-auto w-[360px] rounded-2xl ${th.cardBg} p-5 text-sm text-gray-700`}
     >
       <div className="text-center">
-        <div className="text-xs font-semibold text-purple-500">{CONFIG.schoolName}</div>
-        <h2 className="text-lg font-extrabold text-pink-600">🧾 {t('title')}</h2>
-        <div className="text-xs text-gray-500">
+        <div className={`text-xs font-semibold ${th.accentText}`}>{CONFIG.schoolName}</div>
+        <h2 className={`text-lg font-extrabold ${th.accentText}`}>🧾 {t('title')}</h2>
+        <div className={`text-xs ${th.subText}`}>
           {t('month')} {month}/{year}
         </div>
       </div>
@@ -58,26 +61,26 @@ export const ReceiptCard = forwardRef<
           </span>
         </div>
       </div>
-      <div className="mt-3 rounded-xl bg-white/70 p-3 text-center">
-        <div className="text-xs text-gray-500">{t('total')}</div>
-        <div className="text-2xl font-extrabold text-pink-600">{formatPrice(total)}</div>
+      <div className={`mt-3 rounded-xl ${th.totalBg} p-3 text-center`}>
+        <div className={`text-xs ${th.subText}`}>{t('total')}</div>
+        <div className={`text-2xl font-extrabold ${th.accentText}`}>{formatPrice(total)}</div>
       </div>
       {dates.length > 0 && (
         <div className="mt-3">
-          <div className="text-xs font-semibold text-gray-500">{t('attendedDates')}</div>
+          <div className={`text-xs font-semibold ${th.subText}`}>{t('attendedDates')}</div>
           <div className="mt-1 flex flex-wrap gap-1">
             {dates.map((d) => (
-              <span key={d} className="rounded bg-purple-100 px-2 py-0.5 text-xs">
+              <span key={d} className={`rounded ${th.badgeBg} px-2 py-0.5 text-xs`}>
                 {formatDdMm(d)}
               </span>
             ))}
           </div>
         </div>
       )}
-      <div className="mt-3 border-t border-dashed border-pink-200 pt-2 text-center">
-        <div className="text-xs font-semibold text-gray-500">— {t('comment')} —</div>
+      <div className={`mt-3 border-t border-dashed ${th.border} pt-2 text-center`}>
+        <div className={`text-xs font-semibold ${th.subText}`}>— {t('comment')} —</div>
         {comment && <div className="mt-1 italic">{comment}</div>}
-        <div className="mt-1 text-xs text-pink-500">{CONFIG.receiptGreeting}</div>
+        <div className={`mt-1 text-xs ${th.accentText}`}>{CONFIG.receiptGreeting}</div>
       </div>
       <div className="mt-3 flex flex-col items-center gap-1">
         <VietQrCode amount={total} addInfo={`Hoc phi ${student.fullName}`} />

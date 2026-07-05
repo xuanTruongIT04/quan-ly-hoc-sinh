@@ -1,0 +1,27 @@
+'use client'
+import { useAppStore } from '@/store/useAppStore'
+import { RECEIPT_THEMES } from '@/lib/receipt-themes'
+import { cn } from '@/lib/utils'
+
+export function ThemePicker() {
+  const { receiptTheme, setReceiptTheme } = useAppStore()
+  return (
+    <div className="flex flex-wrap gap-1">
+      {RECEIPT_THEMES.map((t) => (
+        <button
+          key={t.id}
+          type="button"
+          onClick={() => setReceiptTheme(t.id)}
+          className={cn(
+            'rounded-full border px-2 py-1 text-xs transition-colors',
+            receiptTheme === t.id
+              ? 'border-pink-500 bg-pink-100 font-semibold'
+              : 'border-gray-200 hover:bg-gray-50',
+          )}
+        >
+          {t.emoji} {t.name}
+        </button>
+      ))}
+    </div>
+  )
+}
