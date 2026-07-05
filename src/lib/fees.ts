@@ -1,4 +1,5 @@
-import type { Student, AttendanceRecord } from '@/types'
+import type { Student, AttendanceRecord, ExtraFee } from '@/types'
+import { commentKey } from '@/types'
 import { isInMonth } from './utils'
 
 export function countSessions(
@@ -16,17 +17,28 @@ export function monthlyFee(
   return countSessions(student.id, attendance, year, month) * student.fee
 }
 
+export function receiptTotal(
+  student: Student, attendance: AttendanceRecord[], extraFee: ExtraFee, year: number, month: number,
+): number {
+  return monthlyFee(student, attendance, year, month) + (extraFee?.amount ?? 0)
+}
+
 export function revenueForMonth(
   students: Student[], attendance: AttendanceRecord[], year: number, month: number,
+  extraFees: Record<string, ExtraFee> = {},
 ): number {
-  return students.reduce((sum, s) => sum + monthlyFee(s, attendance, year, month), 0)
+  return students.reduce((sum, s) => {
+    const extra = extraFees[commentKey(s.id, year, month)]?.amount ?? 0
+    return sum + monthlyFee(s, attendance, year, month) + extra
+  }, 0)
 }
 
 export function revenueForYear(
   students: Student[], attendance: AttendanceRecord[], year: number,
+  extraFees: Record<string, ExtraFee> = {},
 ): number {
   let total = 0
-  for (let m = 1; m <= 12; m++) total += revenueForMonth(students, attendance, year, m)
+  for (let m = 1; m <= 12; m++) total += revenueForMonth(students, attendance, year, m, extraFees)
   return total
 }
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { countSessions, monthlyFee, revenueForMonth, revenueForYear, revenueForDay, classSessionsInMonth } from './fees'
-import type { Student, AttendanceRecord } from '@/types'
+import { countSessions, monthlyFee, revenueForMonth, revenueForYear, revenueForDay, classSessionsInMonth, receiptTotal } from './fees'
+import type { Student, AttendanceRecord, ExtraFee } from '@/types'
 
 const perSession: Student = { id: 'p', fullName: 'P', className: 'L', feeMode: 'per_session', fee: 100000, startDate: '2026-07-01', sortOrder: 1 }
 const fixed: Student = { id: 'f', fullName: 'F', className: 'L', feeMode: 'fixed_monthly', fee: 1200000, startDate: '2026-07-01', sortOrder: 2 }
@@ -83,5 +83,35 @@ describe('classSessionsInMonth', () => {
 
   it('lớp không có điểm danh → 0', () => {
     expect(classSessionsInMonth('Không Tồn Tại', students, att, 2026, 7)).toBe(0)
+  })
+})
+
+describe('receiptTotal + doanh thu có phụ phí', () => {
+  const perSession = { id: 'p', fullName: 'P', className: 'L', feeMode: 'per_session' as const, fee: 100000, startDate: '2026-07-01', sortOrder: 1 }
+  const att = [
+    { studentId: 'p', date: '2026-07-02', status: 'present' as const },
+    { studentId: 'p', date: '2026-07-04', status: 'present' as const },
+  ]
+  const noFee: ExtraFee = { amount: 0, note: '' }
+  const fee50: ExtraFee = { amount: 50000, note: 'Tiền sách' }
+
+  it('receiptTotal = học phí + phụ phí', () => {
+    expect(receiptTotal(perSession, att, noFee, 2026, 7)).toBe(200000)      // 2 buổi × 100k
+    expect(receiptTotal(perSession, att, fee50, 2026, 7)).toBe(250000)      // + 50k phụ phí
+  })
+  it('revenueForMonth KHÔNG có extraFees = như cũ (không phá test cũ)', () => {
+    expect(revenueForMonth([perSession], att, 2026, 7)).toBe(200000)
+  })
+  it('revenueForMonth CÓ extraFees cộng phụ phí đúng HS/tháng', () => {
+    // key phụ phí của p tháng 7
+    const extraFees = { 'p:2026-07': fee50 }
+    expect(revenueForMonth([perSession], att, 2026, 7, extraFees)).toBe(250000)
+    // phụ phí tháng khác không tính vào tháng 7
+    expect(revenueForMonth([perSession], att, 2026, 8, { 'p:2026-08': fee50 })).toBe(0 + 50000)
+  })
+  it('revenueForYear cộng phụ phí các tháng', () => {
+    const extraFees = { 'p:2026-07': fee50 }
+    // T7: 200k + 50k = 250k; các tháng khác 0 → 250k
+    expect(revenueForYear([perSession], att, 2026, extraFees)).toBe(250000)
   })
 })
