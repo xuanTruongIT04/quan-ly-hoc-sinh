@@ -2,11 +2,12 @@
 import { forwardRef } from 'react'
 import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
-import { countSessions, monthlyFee } from '@/lib/fees'
+import { countSessions, receiptTotal } from '@/lib/fees'
 import { formatPrice, isInMonth } from '@/lib/utils'
 import { CONFIG } from '@/lib/config'
 import { getBank } from '@/lib/napas-banks'
 import { getTheme, type ReceiptTheme } from '@/lib/receipt-themes'
+import type { ExtraFee } from '@/types'
 import { VietQrCode } from './VietQrCode'
 
 function formatDdMm(iso: string): string {
@@ -23,17 +24,21 @@ export const ReceiptCard = forwardRef<
     comment: string
     theme?: ReceiptTheme
     onQrReady?: () => void
+    extraFee?: ExtraFee
+    paid?: boolean
   }
->(function ReceiptCard({ studentId, year, month, comment, theme, onQrReady }, ref) {
+>(function ReceiptCard({ studentId, year, month, comment, theme, onQrReady, extraFee, paid }, ref) {
   const t = useTranslations('receipt')
-  const { students, attendance } = useAppStore()
+  const { students, attendance, getExtraFee, isPaid } = useAppStore()
   const student = students.find((s) => s.id === studentId)
   if (!student) return null
 
   const th = theme ?? getTheme('strawberry')
+  const ef = extraFee ?? getExtraFee(student.id, year, month)
+  const isPaidNow = paid ?? isPaid(student.id, year, month)
 
   const sessions = countSessions(student.id, attendance, year, month)
-  const total = monthlyFee(student, attendance, year, month)
+  const total = receiptTotal(student, attendance, ef, year, month)
   const dates = attendance
     .filter((a) => a.studentId === student.id && a.status === 'present' && isInMonth(a.date, year, month))
     .map((a) => a.date)
@@ -51,6 +56,11 @@ export const ReceiptCard = forwardRef<
         <div className={`text-xs ${th.subText}`}>
           {t('month')} {month}/{year}
         </div>
+        <div
+          className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${isPaidNow ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-600'}`}
+        >
+          {isPaidNow ? t('paid') : t('unpaid')}
+        </div>
       </div>
       <div className="mt-3 space-y-1">
         <div className="flex justify-between">
@@ -67,6 +77,12 @@ export const ReceiptCard = forwardRef<
             {sessions} {t('sessionUnit')}
           </span>
         </div>
+        {ef.amount > 0 && (
+          <div className="flex justify-between">
+            <span>➕ {t('extraFee')}{ef.note ? ` (${ef.note})` : ''}</span>
+            <span>{formatPrice(ef.amount)}</span>
+          </div>
+        )}
       </div>
       <div className={`mt-3 rounded-xl ${th.totalBg} p-3 text-center`}>
         <div className={`text-xs ${th.subText}`}>{t('total')}</div>
