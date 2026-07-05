@@ -17,10 +17,14 @@ export function monthlyFee(
   return countSessions(student.id, attendance, year, month) * student.fee
 }
 
+function sanitizeExtraAmount(amount: number | undefined): number {
+  return Number.isFinite(amount) && amount! > 0 ? amount! : 0
+}
+
 export function receiptTotal(
   student: Student, attendance: AttendanceRecord[], extraFee: ExtraFee, year: number, month: number,
 ): number {
-  return monthlyFee(student, attendance, year, month) + (extraFee?.amount ?? 0)
+  return monthlyFee(student, attendance, year, month) + sanitizeExtraAmount(extraFee?.amount)
 }
 
 export function revenueForMonth(
@@ -28,7 +32,7 @@ export function revenueForMonth(
   extraFees: Record<string, ExtraFee> = {},
 ): number {
   return students.reduce((sum, s) => {
-    const extra = extraFees[commentKey(s.id, year, month)]?.amount ?? 0
+    const extra = sanitizeExtraAmount(extraFees[commentKey(s.id, year, month)]?.amount)
     return sum + monthlyFee(s, attendance, year, month) + extra
   }, 0)
 }

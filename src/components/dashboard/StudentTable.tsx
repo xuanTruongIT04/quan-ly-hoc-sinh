@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
 import { usePeriodStore } from '@/store/usePeriodStore'
-import { countSessions, monthlyFee, classSessionsInMonth } from '@/lib/fees'
+import { countSessions, receiptTotal, classSessionsInMonth } from '@/lib/fees'
 import { formatPrice } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -14,7 +14,7 @@ import { BatchReceiptExport } from '@/components/receipt/BatchReceiptExport'
 
 export function StudentTable() {
   const t = useTranslations('dashboard')
-  const { students, attendance, classNames, isPaid } = useAppStore()
+  const { students, attendance, classNames, isPaid, getExtraFee } = useAppStore()
   const { year, month } = usePeriodStore()
   const [q, setQ] = useState('')
   const [cls, setCls] = useState('__all__')
@@ -60,11 +60,13 @@ export function StudentTable() {
               <TableCell colSpan={6} className="text-center text-gray-500 py-8">{t('noResults')}</TableCell>
             </TableRow>
           ) : (
-            rows.map((s) => (
+            rows.map((s) => {
+              const total = receiptTotal(s, attendance, getExtraFee(s.id, year, month), year, month)
+              return (
               <TableRow key={s.id}>
                 <TableCell className="font-medium">
                   {s.fullName}
-                  {!isPaid(s.id, year, month) && (
+                  {!isPaid(s.id, year, month) && total > 0 && (
                     <span className="ml-2 rounded bg-red-100 px-1.5 py-0.5 text-xs text-red-600">{t('debtBadge')}</span>
                   )}
                 </TableCell>
@@ -73,7 +75,7 @@ export function StudentTable() {
                   {countSessions(s.id, attendance, year, month)}/{classSessionsInMonth(s.className, students, attendance, year, month)}
                 </TableCell>
                 <TableCell className="text-center">{countSessions(s.id, attendance, year, month)}</TableCell>
-                <TableCell className="text-right">{formatPrice(monthlyFee(s, attendance, year, month))}</TableCell>
+                <TableCell className="text-right">{formatPrice(total)}</TableCell>
                 <TableCell className="text-right">
                   <ReceiptDialog
                     studentId={s.id}
@@ -83,7 +85,8 @@ export function StudentTable() {
                   />
                 </TableCell>
               </TableRow>
-            ))
+              )
+            })
           )}
         </TableBody>
       </Table>

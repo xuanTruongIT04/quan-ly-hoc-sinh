@@ -114,4 +114,20 @@ describe('receiptTotal + doanh thu có phụ phí', () => {
     // T7: 200k + 50k = 250k; các tháng khác 0 → 250k
     expect(revenueForYear([perSession], att, 2026, extraFees)).toBe(250000)
   })
+
+  it('receiptTotal với extraFee âm → coi như 0 (chỉ tính học phí)', () => {
+    const feeNegative: ExtraFee = { amount: -5, note: '' }
+    expect(receiptTotal(perSession, att, feeNegative, 2026, 7)).toBe(200000)
+  })
+
+  it('receiptTotal với extraFee NaN → coi như 0 (chỉ tính học phí)', () => {
+    const feeNaN: ExtraFee = { amount: NaN, note: '' }
+    expect(receiptTotal(perSession, att, feeNaN, 2026, 7)).toBe(200000)
+  })
+
+  it('revenueForMonth với 1 extraFee.amount = NaN trong map → không lan NaN, coi như 0', () => {
+    const extraFees = { 'p:2026-07': { amount: NaN, note: '' } }
+    expect(revenueForMonth([perSession], att, 2026, 7, extraFees)).toBe(200000)
+    expect(Number.isNaN(revenueForMonth([perSession], att, 2026, 7, extraFees))).toBe(false)
+  })
 })

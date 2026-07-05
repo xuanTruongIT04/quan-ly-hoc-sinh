@@ -65,7 +65,9 @@ export function ReceiptDialog({
   }
 
   function saveExtraFee() {
-    setExtraFee(studentId, year, month, feeAmount, feeNote)
+    const amt = Number.isFinite(feeAmount) && feeAmount > 0 ? feeAmount : 0
+    setFeeAmount(amt)
+    setExtraFee(studentId, year, month, amt, feeNote)
     toast.success(t('saveExtraFee'))
   }
 
@@ -159,6 +161,7 @@ export function ReceiptDialog({
         <div className="flex flex-wrap gap-2">
           <input
             type="number"
+            min={0}
             className="w-32 rounded-md border p-2 text-sm"
             placeholder={t('extraFeeLabel')}
             value={feeAmount}
