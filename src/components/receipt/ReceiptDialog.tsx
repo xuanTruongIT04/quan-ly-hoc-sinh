@@ -5,6 +5,7 @@ import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
 import { getTheme } from '@/lib/receipt-themes'
+import { CONFIG } from '@/lib/config'
 import { ReceiptCard } from './ReceiptCard'
 import { ThemePicker } from './ThemePicker'
 import { BatchReceiptExport } from './BatchReceiptExport'
@@ -34,7 +35,7 @@ export function ReceiptDialog({
   trigger: React.ReactElement
 }) {
   const t = useTranslations('receipt')
-  const { students, setComment, getComment, receiptTheme, setExtraFee, getExtraFee, setPaid, isPaid } = useAppStore()
+  const { students, setComment, getComment, receiptTheme, setExtraFee, getExtraFee, setPaid, isPaid, setScore, getScore } = useAppStore()
   const theme = getTheme(receiptTheme)
   const [open, setOpen] = useState(false)
   const [year, setYear] = useState(defaultYear)
@@ -43,6 +44,8 @@ export function ReceiptDialog({
   const [feeAmount, setFeeAmount] = useState(0)
   const [feeNote, setFeeNote] = useState('')
   const [paidState, setPaidState] = useState(false)
+  const [s1, setS1] = useState<number | null>(null)
+  const [s2, setS2] = useState<number | null>(null)
   const cardRef = useRef<HTMLDivElement>(null)
   const student = students.find((s) => s.id === studentId)
 
@@ -52,6 +55,9 @@ export function ReceiptDialog({
     setFeeAmount(ef.amount)
     setFeeNote(ef.note)
     setPaidState(isPaid(studentId, y, m))
+    const sc = getScore(studentId, y, m)
+    setS1(sc.s1)
+    setS2(sc.s2)
   }
 
   function onOpenChange(o: boolean) {
@@ -75,6 +81,11 @@ export function ReceiptDialog({
     const next = !paidState
     setPaidState(next)
     setPaid(studentId, year, month, next)
+  }
+
+  function saveScore() {
+    setScore(studentId, year, month, s1, s2)
+    toast.success(t('saveScore'))
   }
 
   async function download() {
@@ -156,6 +167,7 @@ export function ReceiptDialog({
             theme={theme}
             extraFee={{ amount: feeAmount, note: feeNote }}
             paid={paidState}
+            score={{ s1, s2 }}
           />
         </div>
         <div className="flex flex-wrap gap-2">
@@ -181,6 +193,31 @@ export function ReceiptDialog({
         <Button variant={paidState ? 'default' : 'outline'} onClick={togglePaid}>
           {paidState ? t('markUnpaid') : t('markPaid')}
         </Button>
+        <div className="flex flex-wrap gap-2">
+          <input
+            type="number"
+            step="0.1"
+            min={0}
+            max={10}
+            className="w-28 rounded-md border p-2 text-sm"
+            placeholder={CONFIG.scoreLabels[0]}
+            value={s1 ?? ''}
+            onChange={(e) => setS1(e.target.value === '' ? null : Number(e.target.value))}
+          />
+          <input
+            type="number"
+            step="0.1"
+            min={0}
+            max={10}
+            className="w-28 rounded-md border p-2 text-sm"
+            placeholder={CONFIG.scoreLabels[1]}
+            value={s2 ?? ''}
+            onChange={(e) => setS2(e.target.value === '' ? null : Number(e.target.value))}
+          />
+          <Button variant="outline" onClick={saveScore}>
+            💾 {t('saveScore')}
+          </Button>
+        </div>
         <textarea
           className="min-h-16 w-full rounded-md border p-2 text-sm"
           placeholder={t('commentPlaceholder')}

@@ -7,7 +7,7 @@ import { formatPrice, isInMonth } from '@/lib/utils'
 import { CONFIG } from '@/lib/config'
 import { getBank } from '@/lib/napas-banks'
 import { getTheme, type ReceiptTheme } from '@/lib/receipt-themes'
-import type { ExtraFee } from '@/types'
+import type { ExtraFee, ScorePair } from '@/types'
 import { VietQrCode } from './VietQrCode'
 
 function formatDdMm(iso: string): string {
@@ -26,23 +26,24 @@ export const ReceiptCard = forwardRef<
     onQrReady?: () => void
     extraFee?: ExtraFee
     paid?: boolean
+    score?: ScorePair
   }
->(function ReceiptCard({ studentId, year, month, comment, theme, onQrReady, extraFee, paid }, ref) {
+>(function ReceiptCard({ studentId, year, month, comment, theme, onQrReady, extraFee, paid, score }, ref) {
   const t = useTranslations('receipt')
-  const { students, attendance, getExtraFee, isPaid } = useAppStore()
+  const { students, attendance, getExtraFee, isPaid, getScore } = useAppStore()
   const student = students.find((s) => s.id === studentId)
   if (!student) return null
 
   const th = theme ?? getTheme('strawberry')
   const ef = extraFee ?? getExtraFee(student.id, year, month)
   const isPaidNow = paid ?? isPaid(student.id, year, month)
+  const sc = score ?? getScore(student.id, year, month)
 
   const sessions = countSessions(student.id, attendance, year, month)
   const total = receiptTotal(student, attendance, ef, year, month)
-  const dates = attendance
-    .filter((a) => a.studentId === student.id && a.status === 'present' && isInMonth(a.date, year, month))
-    .map((a) => a.date)
-    .sort()
+  const dayRecords = attendance
+    .filter((a) => a.studentId === student.id && a.status !== 'absent' && isInMonth(a.date, year, month))
+    .sort((a, b) => a.date.localeCompare(b.date))
   const bank = getBank(CONFIG.bank.bankCode)
 
   return (
@@ -88,13 +89,16 @@ export const ReceiptCard = forwardRef<
         <div className={`text-xs ${th.subText}`}>{t('total')}</div>
         <div className={`text-2xl font-extrabold ${th.accentText}`}>{formatPrice(total)}</div>
       </div>
-      {dates.length > 0 && (
+      {dayRecords.length > 0 && (
         <div className="mt-3">
           <div className={`text-xs font-semibold ${th.subText}`}>{t('attendedDates')}</div>
           <div className="mt-1 flex flex-wrap gap-1">
-            {dates.map((d) => (
-              <span key={d} className={`rounded ${th.badgeBg} px-2 py-0.5 text-xs`}>
-                {formatDdMm(d)}
+            {dayRecords.map((r) => (
+              <span
+                key={r.date}
+                className={`rounded px-2 py-0.5 text-xs ${r.status === 'present2' ? 'bg-amber-200 text-amber-800' : th.badgeBg}`}
+              >
+                {formatDdMm(r.date)}{r.status === 'present2' ? ' (B2)' : ''}
               </span>
             ))}
           </div>
@@ -103,6 +107,12 @@ export const ReceiptCard = forwardRef<
       <div className={`mt-3 border-t border-dashed ${th.border} pt-2 text-center`}>
         <div className={`text-xs font-semibold ${th.subText}`}>— {t('comment')} —</div>
         {comment && <div className="mt-1 italic">{comment}</div>}
+        {(sc.s1 != null || sc.s2 != null) && (
+          <div className="mt-1 flex justify-center gap-4 text-xs">
+            {sc.s1 != null && <span>{CONFIG.scoreLabels[0]}: <b>{sc.s1}</b></span>}
+            {sc.s2 != null && <span>{CONFIG.scoreLabels[1]}: <b>{sc.s2}</b></span>}
+          </div>
+        )}
         <div className={`mt-1 text-xs ${th.accentText}`}>{CONFIG.receiptGreeting}</div>
       </div>
       <div className="mt-3 flex flex-col items-center gap-1">

@@ -35,7 +35,8 @@
     "batchDone": "Đã tải {n}/{total} phiếu", "batchError": "Lỗi tải phiếu của {name}", "batchBusy": "⏳ Đang tải...",
     "extraFee": "Phụ phí", "paid": "✅ ĐÃ THANH TOÁN", "unpaid": "⚠️ CHƯA THANH TOÁN",
     "extraFeeLabel": "Phụ phí", "extraFeeNote": "Ghi chú phụ phí", "saveExtraFee": "Lưu phụ phí",
-    "markPaid": "✅ Đánh dấu đã trả", "markUnpaid": "⚠️ Đánh dấu chưa trả"
+    "markPaid": "✅ Đánh dấu đã trả", "markUnpaid": "⚠️ Đánh dấu chưa trả",
+    "scores": "Điểm", "saveScore": "Lưu điểm"
   },
   "common": { "cancel": "Hủy", "save": "Lưu", "close": "Đóng" }
 }
