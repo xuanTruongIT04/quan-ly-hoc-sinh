@@ -2,6 +2,7 @@ import { MonthYearPicker } from '@/components/dashboard/MonthYearPicker'
 import { StatCards } from '@/components/dashboard/StatCards'
 import { StudentTable } from '@/components/dashboard/StudentTable'
 import { ViewTodayAttendanceButton } from '@/components/dashboard/ViewTodayAttendanceButton'
+import { DashboardCharts } from '@/components/dashboard/charts/DashboardCharts'
 
 export default function DashboardPage() {
   return (
@@ -15,6 +16,7 @@ export default function DashboardPage() {
       </div>
       <StatCards />
       <StudentTable />
+      <DashboardCharts />
     </div>
   )
 }
