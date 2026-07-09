@@ -15,7 +15,7 @@ const studentSchema = z.object({
 const attendanceSchema = z.object({
   studentId: z.string(),
   date: z.string(),
-  status: z.enum(['present', 'absent']),
+  status: z.enum(['present', 'present2', 'absent']),
 })
 
 export const appDataSchema = z.object({

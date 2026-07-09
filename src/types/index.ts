@@ -14,7 +14,7 @@ export interface Student {
 export interface AttendanceRecord {
   studentId: string
   date: string       // 'yyyy-mm-dd'
-  status: 'present' | 'absent'
+  status: 'present' | 'present2' | 'absent'
 }
 
 export interface AppData {
@@ -35,4 +35,9 @@ export function commentKey(studentId: string, year: number, month: number): stri
 export interface ExtraFee {
   amount: number   // VND, KHÔNG chia 100
   note: string     // ghi chú tùy chọn, '' nếu không có
+}
+
+export interface ScorePair {
+  s1: number | null   // điểm cột 1 (0-10), null = chưa nhập
+  s2: number | null   // điểm cột 2
 }

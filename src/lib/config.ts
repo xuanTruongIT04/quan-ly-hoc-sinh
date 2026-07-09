@@ -13,4 +13,5 @@ export const CONFIG = {
   defaultFee: 100000, // VND
   bank,
   receiptGreeting: '🌸 Chúc cả nhà một ngày tuyệt vời!',
+  scoreLabels: ['Điểm miệng', 'Điểm viết'] as [string, string],
 } as const
