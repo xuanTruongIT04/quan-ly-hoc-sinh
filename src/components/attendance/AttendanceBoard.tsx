@@ -57,6 +57,10 @@ export function AttendanceBoard() {
                   onClick={() => { setAttendance(s.id, date, 'present'); toast.success(t('saved')) }}>
                   {t('present')}
                 </Button>
+                <Button size="sm" variant={st === 'present2' ? 'secondary' : 'outline'}
+                  onClick={() => { setAttendance(s.id, date, 'present2'); toast.success(t('saved')) }}>
+                  {t('present2')}
+                </Button>
                 <Button size="sm" variant={st === 'absent' ? 'destructive' : 'outline'}
                   onClick={() => { setAttendance(s.id, date, 'absent'); toast.success(t('saved')) }}>
                   {t('absent')}

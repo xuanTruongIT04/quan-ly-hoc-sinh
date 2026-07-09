@@ -21,7 +21,7 @@
   },
   "attendance": {
     "title": "Điểm danh", "selectClass": "Chọn lớp", "date": "Ngày",
-    "present": "Có", "absent": "Vắng", "markAllPresent": "Cả lớp Có", "bulk": "Điểm danh hàng loạt",
+    "present": "Có", "present2": "Có B2", "absent": "Vắng", "markAllPresent": "Cả lớp Có", "bulk": "Điểm danh hàng loạt",
     "noClass": "Chưa có lớp. Hãy thêm học sinh trước.", "saved": "Đã điểm danh"
   },
   "receipt": {

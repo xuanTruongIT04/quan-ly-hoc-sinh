@@ -6,7 +6,7 @@ export interface Student {
   className: string
   feeMode: FeeMode
   fee: number        // VND, KHÔNG chia 100
-  fee2?: number      // "HP Buổi 2" — lưu, chưa dùng tính ở Phase 1
+  fee2?: number      // "HP Buổi 2" — học phí cho buổi 2 (present2); nếu 0/undefined dùng fee
   startDate: string  // 'yyyy-mm-dd'
   sortOrder: number  // STT
 }

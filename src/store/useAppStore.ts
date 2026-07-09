@@ -16,7 +16,7 @@ interface AppState extends AppData {
   updateStudent: (id: string, patch: Partial<Student>) => void
   removeStudent: (id: string) => void
   addStudentsBulk: (list: Omit<Student, 'id'>[]) => void
-  setAttendance: (studentId: string, date: string, status: 'present' | 'absent') => void
+  setAttendance: (studentId: string, date: string, status: AttendanceRecord['status']) => void
   markClassPresent: (studentIds: string[], date: string) => void
   replaceAll: (data: AppData) => void
   classNames: () => string[]
