@@ -6,15 +6,38 @@ export function countSessions(
   studentId: string, attendance: AttendanceRecord[], year: number, month: number,
 ): number {
   return attendance.filter(
+    (a) => a.studentId === studentId && a.status !== 'absent' && isInMonth(a.date, year, month),
+  ).length
+}
+
+export function countSessions1(
+  studentId: string, attendance: AttendanceRecord[], year: number, month: number,
+): number {
+  return attendance.filter(
     (a) => a.studentId === studentId && a.status === 'present' && isInMonth(a.date, year, month),
   ).length
+}
+
+export function countSessions2(
+  studentId: string, attendance: AttendanceRecord[], year: number, month: number,
+): number {
+  return attendance.filter(
+    (a) => a.studentId === studentId && a.status === 'present2' && isInMonth(a.date, year, month),
+  ).length
+}
+
+function feeForSession2(student: Student): number {
+  return student.fee2 && student.fee2 > 0 ? student.fee2 : student.fee
 }
 
 export function monthlyFee(
   student: Student, attendance: AttendanceRecord[], year: number, month: number,
 ): number {
   if (student.feeMode === 'fixed_monthly') return student.fee
-  return countSessions(student.id, attendance, year, month) * student.fee
+  return (
+    countSessions1(student.id, attendance, year, month) * student.fee +
+    countSessions2(student.id, attendance, year, month) * feeForSession2(student)
+  )
 }
 
 function sanitizeExtraAmount(amount: number | undefined): number {
@@ -63,9 +86,9 @@ export function revenueForDay(
 ): number {
   return students.reduce((sum, s) => {
     if (s.feeMode !== 'per_session') return sum
-    const present = attendance.some(
-      (a) => a.studentId === s.id && a.date === dateISO && a.status === 'present',
-    )
-    return present ? sum + s.fee : sum
+    const rec = attendance.find((a) => a.studentId === s.id && a.date === dateISO)
+    if (rec?.status === 'present') return sum + s.fee
+    if (rec?.status === 'present2') return sum + feeForSession2(s)
+    return sum
   }, 0)
 }

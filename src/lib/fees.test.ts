@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { countSessions, monthlyFee, revenueForMonth, revenueForYear, revenueForDay, classSessionsInMonth, receiptTotal } from './fees'
+import { countSessions, countSessions1, countSessions2, monthlyFee, revenueForMonth, revenueForYear, revenueForDay, classSessionsInMonth, receiptTotal } from './fees'
 import type { Student, AttendanceRecord, ExtraFee } from '@/types'
 
 const perSession: Student = { id: 'p', fullName: 'P', className: 'L', feeMode: 'per_session', fee: 100000, startDate: '2026-07-01', sortOrder: 1 }
@@ -129,5 +129,30 @@ describe('receiptTotal + doanh thu có phụ phí', () => {
     const extraFees = { 'p:2026-07': { amount: NaN, note: '' } }
     expect(revenueForMonth([perSession], att, 2026, 7, extraFees)).toBe(200000)
     expect(Number.isNaN(revenueForMonth([perSession], att, 2026, 7, extraFees))).toBe(false)
+  })
+})
+
+describe('buổi 2 (present2) + fee2', () => {
+  const s = { id: 'x', fullName: 'X', className: 'L', feeMode: 'per_session' as const, fee: 100000, fee2: 150000, startDate: '2026-07-01', sortOrder: 1 }
+  const sNoFee2 = { ...s, id: 'y', fee2: 0 }
+  const att = [
+    { studentId: 'x', date: '2026-07-02', status: 'present' as const },
+    { studentId: 'x', date: '2026-07-04', status: 'present2' as const },   // buổi 2
+    { studentId: 'y', date: '2026-07-02', status: 'present' as const },
+    { studentId: 'y', date: '2026-07-04', status: 'present2' as const },   // buổi 2, fee2=0
+  ]
+
+  it('countSessions = tổng (present + present2)', () => {
+    expect(countSessions('x', att, 2026, 7)).toBe(2)
+  })
+  it('countSessions1 chỉ present, countSessions2 chỉ present2', () => {
+    expect(countSessions1('x', att, 2026, 7)).toBe(1)
+    expect(countSessions2('x', att, 2026, 7)).toBe(1)
+  })
+  it('monthlyFee = buổi1×fee + buổi2×fee2 (khi fee2>0)', () => {
+    expect(monthlyFee(s, att, 2026, 7)).toBe(100000 + 150000)   // 1×100k + 1×150k
+  })
+  it('monthlyFee dùng fee cho buổi 2 khi fee2=0 (tránh mất tiền)', () => {
+    expect(monthlyFee(sNoFee2, att, 2026, 7)).toBe(100000 + 100000)   // buổi2 dùng fee=100k
   })
 })
