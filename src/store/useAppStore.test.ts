@@ -170,3 +170,18 @@ describe('extraFees + payments', () => {
     expect(useAppStore.getState().isPaid('s1', 2026, 8)).toBe(false)
   })
 })
+
+describe('scores', () => {
+  beforeEach(() => useAppStore.setState({ scores: {} }))
+  it('setScore rồi getScore trả đúng theo tháng', () => {
+    useAppStore.getState().setScore('s1', 2026, 7, 8.5, 9)
+    expect(useAppStore.getState().getScore('s1', 2026, 7)).toEqual({ s1: 8.5, s2: 9 })
+  })
+  it('getScore mặc định {s1:null,s2:null}', () => {
+    expect(useAppStore.getState().getScore('s1', 2026, 9)).toEqual({ s1: null, s2: null })
+  })
+  it('cho phép điểm null (chưa nhập)', () => {
+    useAppStore.getState().setScore('s1', 2026, 7, null, 7)
+    expect(useAppStore.getState().getScore('s1', 2026, 7)).toEqual({ s1: null, s2: 7 })
+  })
+})

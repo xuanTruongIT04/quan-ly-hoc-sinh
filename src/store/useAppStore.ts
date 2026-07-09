@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import type { AppData, Student, AttendanceRecord, ExtraFee } from '@/types'
+import type { AppData, Student, AttendanceRecord, ExtraFee, ScorePair } from '@/types'
 import { commentKey } from '@/types'
 import { STORAGE_KEY } from '@/lib/repositories/storage'
 import { SEED_DATA } from '@/data/students'
@@ -30,6 +30,9 @@ interface AppState extends AppData {
   getExtraFee: (studentId: string, year: number, month: number) => ExtraFee
   setPaid: (studentId: string, year: number, month: number, paid: boolean) => void
   isPaid: (studentId: string, year: number, month: number) => boolean
+  scores: Record<string, ScorePair>
+  setScore: (studentId: string, year: number, month: number, s1: number | null, s2: number | null) => void
+  getScore: (studentId: string, year: number, month: number) => ScorePair
 }
 
 export const useAppStore = create<AppState>()(
@@ -87,11 +90,17 @@ export const useAppStore = create<AppState>()(
       setPaid: (studentId, year, month, paid) =>
         set((st) => ({ payments: { ...st.payments, [commentKey(studentId, year, month)]: paid } })),
       isPaid: (studentId, year, month) => get().payments[commentKey(studentId, year, month)] ?? false,
+
+      scores: {},
+      setScore: (studentId, year, month, s1, s2) =>
+        set((st) => ({ scores: { ...st.scores, [commentKey(studentId, year, month)]: { s1, s2 } } })),
+      getScore: (studentId, year, month) =>
+        get().scores[commentKey(studentId, year, month)] ?? { s1: null, s2: null },
     }),
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
-      partialize: (s) => ({ students: s.students, attendance: s.attendance, comments: s.comments, receiptTheme: s.receiptTheme, extraFees: s.extraFees, payments: s.payments }),
+      partialize: (s) => ({ students: s.students, attendance: s.attendance, comments: s.comments, receiptTheme: s.receiptTheme, extraFees: s.extraFees, payments: s.payments, scores: s.scores }),
     },
   ),
 )
