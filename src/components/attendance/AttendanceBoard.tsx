@@ -57,7 +57,8 @@ export function AttendanceBoard() {
                   onClick={() => { setAttendance(s.id, date, 'present'); toast.success(t('saved')) }}>
                   {t('present')}
                 </Button>
-                <Button size="sm" variant={st === 'present2' ? 'secondary' : 'outline'}
+                <Button size="sm" variant="outline"
+                  className={st === 'present2' ? 'bg-amber-500 text-white hover:bg-amber-600' : ''}
                   onClick={() => { setAttendance(s.id, date, 'present2'); toast.success(t('saved')) }}>
                   {t('present2')}
                 </Button>

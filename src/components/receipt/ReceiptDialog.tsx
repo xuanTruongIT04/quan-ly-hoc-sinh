@@ -83,8 +83,17 @@ export function ReceiptDialog({
     setPaid(studentId, year, month, next)
   }
 
+  function clampScore(n: number | null): number | null {
+    if (n == null || Number.isNaN(n)) return null
+    return Math.min(10, Math.max(0, n))
+  }
+
   function saveScore() {
-    setScore(studentId, year, month, s1, s2)
+    const c1 = clampScore(s1)
+    const c2 = clampScore(s2)
+    setS1(c1)
+    setS2(c2)
+    setScore(studentId, year, month, c1, c2)
     toast.success(t('saveScore'))
   }
 
