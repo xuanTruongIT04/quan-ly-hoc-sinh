@@ -115,9 +115,9 @@ export function ReceiptDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger render={trigger} />
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            {t('title')} — {student?.fullName}
+        <DialogHeader className="-mx-4 -mt-4 rounded-t-xl px-5 py-4" style={{ background: 'linear-gradient(135deg,#e91e63,#c2185b)' }}>
+          <DialogTitle className="text-white">
+            🧾 {t('title')} — {student?.fullName}
           </DialogTitle>
         </DialogHeader>
         <div className="flex gap-2">
@@ -163,7 +163,7 @@ export function ReceiptDialog({
           </Select>
         </div>
         <div>
-          <div className="mb-1 text-xs font-semibold text-gray-500">🎨 {t('theme')}</div>
+          <div className="mb-1 text-xs font-semibold text-[#8d6e63]">🎨 {t('theme')}</div>
           <ThemePicker />
         </div>
         <div className="max-h-[60vh] overflow-auto py-2">
@@ -183,23 +183,23 @@ export function ReceiptDialog({
           <input
             type="number"
             min={0}
-            className="w-32 rounded-md border p-2 text-sm"
+            className="candy-input w-32 text-sm"
             placeholder={t('extraFeeLabel')}
             value={feeAmount}
             onChange={(e) => setFeeAmount(Number(e.target.value))}
           />
           <input
             type="text"
-            className="flex-1 rounded-md border p-2 text-sm"
+            className="candy-input flex-1 text-sm"
             placeholder={t('extraFeeNote')}
             value={feeNote}
             onChange={(e) => setFeeNote(e.target.value)}
           />
-          <Button variant="outline" onClick={saveExtraFee}>
+          <button type="button" className="candy-btn-outline" onClick={saveExtraFee}>
             💾 {t('saveExtraFee')}
-          </Button>
+          </button>
         </div>
-        <Button variant={paidState ? 'default' : 'outline'} onClick={togglePaid}>
+        <Button variant={paidState ? 'default' : 'outline'} className="rounded-full" onClick={togglePaid}>
           {paidState ? t('markUnpaid') : t('markPaid')}
         </Button>
         <div className="flex flex-wrap gap-2">
@@ -208,7 +208,7 @@ export function ReceiptDialog({
             step="0.1"
             min={0}
             max={10}
-            className="w-28 rounded-md border p-2 text-sm"
+            className="candy-input w-28 text-sm"
             placeholder={CONFIG.scoreLabels[0]}
             value={s1 ?? ''}
             onChange={(e) => setS1(e.target.value === '' ? null : Number(e.target.value))}
@@ -218,17 +218,17 @@ export function ReceiptDialog({
             step="0.1"
             min={0}
             max={10}
-            className="w-28 rounded-md border p-2 text-sm"
+            className="candy-input w-28 text-sm"
             placeholder={CONFIG.scoreLabels[1]}
             value={s2 ?? ''}
             onChange={(e) => setS2(e.target.value === '' ? null : Number(e.target.value))}
           />
-          <Button variant="outline" onClick={saveScore}>
+          <button type="button" className="candy-btn-outline" onClick={saveScore}>
             💾 {t('saveScore')}
-          </Button>
+          </button>
         </div>
         <textarea
-          className="min-h-16 w-full rounded-md border p-2 text-sm"
+          className="min-h-16 w-full rounded-2xl border-[1.5px] border-[#f06292] bg-white p-3 text-sm font-bold text-[#4e342e] outline-none"
           placeholder={t('commentPlaceholder')}
           value={comment}
           onChange={(e) => setLocalComment(e.target.value)}
@@ -240,10 +240,10 @@ export function ReceiptDialog({
             month={month}
             label={t('batchExport')}
           />
-          <Button variant="outline" onClick={save}>
+          <button type="button" className="candy-btn-outline" onClick={save}>
             ✨ {t('saveComment')}
-          </Button>
-          <Button onClick={download}>{t('download')}</Button>
+          </button>
+          <button type="button" className="candy-btn" onClick={download}>{t('download')}</button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

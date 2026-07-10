@@ -14,7 +14,7 @@ export function ThemePicker() {
           onClick={() => setReceiptTheme(t.id)}
           className={cn(
             'rounded-full border px-2 py-1 text-xs transition-colors',
-            receiptTheme === t.id ? `${t.border} ${t.badgeBg} font-semibold` : 'border-gray-200 hover:bg-gray-50',
+            receiptTheme === t.id ? `${t.border} ${t.badgeBg} font-semibold` : 'border-[#fbdce7] hover:bg-[#fff0f5]',
           )}
         >
           {t.emoji} {t.name}

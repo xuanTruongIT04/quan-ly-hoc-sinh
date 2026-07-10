@@ -50,7 +50,9 @@ function StudentFormFields({ editing, onDone }: { editing?: Student; onDone: () 
 
   return (
     <>
-      <DialogHeader><DialogTitle>{editing ? t('edit') : t('add')}</DialogTitle></DialogHeader>
+      <DialogHeader className="-mx-4 -mt-4 rounded-t-xl px-5 py-4" style={{ background: 'linear-gradient(135deg,#e91e63,#c2185b)' }}>
+        <DialogTitle className="text-white">{editing ? t('edit') : t('add')}</DialogTitle>
+      </DialogHeader>
       <div className="space-y-3">
         <div><Label>{t('fullName')}</Label><Input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} /></div>
         <div>
@@ -74,8 +76,8 @@ function StudentFormFields({ editing, onDone }: { editing?: Student; onDone: () 
         <div><Label>{t('sortOrder')}</Label><Input type="number" value={form.sortOrder} onChange={(e) => setForm({ ...form, sortOrder: Number(e.target.value) })} /></div>
       </div>
       <DialogFooter>
-        <Button variant="outline" onClick={onDone}>{tc('cancel')}</Button>
-        <Button onClick={submit}>{tc('save')}</Button>
+        <Button variant="outline" className="rounded-full" onClick={onDone}>{tc('cancel')}</Button>
+        <Button className="rounded-full" onClick={submit}>{tc('save')}</Button>
       </DialogFooter>
     </>
   )
