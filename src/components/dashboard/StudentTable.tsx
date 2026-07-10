@@ -59,7 +59,7 @@ export function StudentTable() {
         <TableBody>
           {rows.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={6} className="text-center text-gray-500 py-8">{t('noResults')}</TableCell>
+              <TableCell colSpan={6} className="text-center text-[#8d6e63] py-8">{t('noResults')}</TableCell>
             </TableRow>
           ) : (
             rows.map((s) => {
