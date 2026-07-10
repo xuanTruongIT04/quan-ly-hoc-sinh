@@ -35,15 +35,18 @@ export function StudentList() {
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
-        <Input placeholder="🔍" value={q} onChange={(e) => setQ(e.target.value)} className="max-w-xs" />
+        <Input placeholder="🔍 Tìm học sinh..." value={q} onChange={(e) => setQ(e.target.value)} className="candy-input max-w-xs" />
         <Select value={cls} onValueChange={(v) => v && setCls(v)}>
-          <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="w-48">
+            <SelectValue>{(v: string) => (v === '__all__' ? t('allClasses') : v)}</SelectValue>
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="__all__">{t('allClasses')}</SelectItem>
             {classNames().map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
           </SelectContent>
         </Select>
       </div>
+      <div className="candy-table">
       <Table>
         <TableHeader>
           <TableRow>
@@ -58,25 +61,26 @@ export function StudentList() {
           {rows.map((s) => (
             <TableRow key={s.id}>
               <TableCell>{s.sortOrder}</TableCell>
-              <TableCell className="font-medium">{s.fullName}</TableCell>
-              <TableCell>{s.className}</TableCell>
-              <TableCell className="text-right">{formatPrice(s.fee)}</TableCell>
+              <TableCell className="font-bold">{s.fullName}</TableCell>
+              <TableCell><span className="candy-pill">{s.className}</span></TableCell>
+              <TableCell className="text-right font-extrabold text-[#c2185b]">{formatPrice(s.fee)}</TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
                   <ReceiptDialog
                     studentId={s.id}
                     defaultYear={curYear}
                     defaultMonth={curMonth}
-                    trigger={<Button variant="outline" size="sm">🧾 Phiếu</Button>}
+                    trigger={<button className="candy-btn-outline text-xs">🧾 Phiếu</button>}
                   />
-                  <StudentForm editing={s} trigger={<Button variant="outline" size="sm">{t('edit')}</Button>} />
-                  <Button variant="destructive" size="sm" onClick={() => onDelete(s.id)}>{t('delete')}</Button>
+                  <StudentForm editing={s} trigger={<button className="candy-btn-outline text-xs">{t('edit')}</button>} />
+                  <Button variant="destructive" size="sm" className="rounded-full" onClick={() => onDelete(s.id)}>{t('delete')}</Button>
                 </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }

@@ -4,7 +4,6 @@ import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
 import { exportJson, parseImportedJson } from '@/lib/repositories/io'
-import { Button } from '@/components/ui/button'
 
 export function ImportExportButtons() {
   const t = useTranslations('students')
@@ -28,8 +27,8 @@ export function ImportExportButtons() {
 
   return (
     <div className="flex gap-2">
-      <Button variant="outline" onClick={() => exportJson({ students, attendance })}>{t('export')}</Button>
-      <Button variant="outline" onClick={() => inputRef.current?.click()}>{t('import')}</Button>
+      <button type="button" className="candy-btn-outline" onClick={() => exportJson({ students, attendance })}>{t('export')}</button>
+      <button type="button" className="candy-btn-outline" onClick={() => inputRef.current?.click()}>{t('import')}</button>
       <input ref={inputRef} type="file" accept="application/json" className="hidden" onChange={onFile} />
     </div>
   )
