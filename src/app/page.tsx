@@ -7,8 +7,8 @@ import { DashboardCharts } from '@/components/dashboard/charts/DashboardCharts'
 export default function DashboardPage() {
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold">Tổng quan</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="font-heading text-2xl font-bold text-[#c2185b]">Tổng quan</h1>
         <div className="flex items-center gap-2">
           <ViewTodayAttendanceButton />
           <MonthYearPicker />

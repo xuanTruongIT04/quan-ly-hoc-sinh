@@ -6,7 +6,6 @@ import { usePeriodStore } from '@/store/usePeriodStore'
 import { countSessions, receiptTotal, classSessionsInMonth } from '@/lib/fees'
 import { formatPrice } from '@/lib/utils'
 import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { ReceiptDialog } from '@/components/receipt/ReceiptDialog'
@@ -25,15 +24,17 @@ export function StudentTable() {
     .sort((a, b) => a.sortOrder - b.sortOrder)
 
   if (students.length === 0) {
-    return <div className="rounded-lg border p-8 text-center text-gray-500">{t('empty')}</div>
+    return <div className="candy-card p-8 text-center text-[#8d6e63]">{t('empty')}</div>
   }
 
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap gap-2">
-        <Input placeholder={t('searchPlaceholder')} value={q} onChange={(e) => setQ(e.target.value)} className="max-w-xs" />
+        <Input placeholder={t('searchPlaceholder')} value={q} onChange={(e) => setQ(e.target.value)} className="candy-input max-w-xs" />
         <Select value={cls} onValueChange={(v) => v && setCls(v)}>
-          <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="w-48">
+            <SelectValue>{(v: string) => (v === '__all__' ? t('allClasses') : v)}</SelectValue>
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="__all__">{t('allClasses')}</SelectItem>
             {classNames().map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}
@@ -43,6 +44,7 @@ export function StudentTable() {
           <BatchReceiptExport studentIds={rows.map((s) => s.id)} year={year} month={month} label={t('batchReceipt')} />
         )}
       </div>
+      <div className="candy-table">
       <Table>
         <TableHeader>
           <TableRow>
@@ -64,24 +66,24 @@ export function StudentTable() {
               const total = receiptTotal(s, attendance, getExtraFee(s.id, year, month), year, month)
               return (
               <TableRow key={s.id}>
-                <TableCell className="font-medium">
+                <TableCell className="font-bold">
                   {s.fullName}
                   {!isPaid(s.id, year, month) && total > 0 && (
-                    <span className="ml-2 rounded bg-red-100 px-1.5 py-0.5 text-xs text-red-600">{t('debtBadge')}</span>
+                    <span className="ml-2 inline-flex items-center rounded-full bg-[#fff3cd] px-2 py-0.5 text-xs font-bold text-[#b8860b]">{t('debtBadge')}</span>
                   )}
                 </TableCell>
-                <TableCell>{s.className}</TableCell>
+                <TableCell><span className="candy-pill">{s.className}</span></TableCell>
                 <TableCell className="text-center">
                   {countSessions(s.id, attendance, year, month)}/{classSessionsInMonth(s.className, students, attendance, year, month)}
                 </TableCell>
                 <TableCell className="text-center">{countSessions(s.id, attendance, year, month)}</TableCell>
-                <TableCell className="text-right">{formatPrice(total)}</TableCell>
+                <TableCell className="text-right font-extrabold text-[#c2185b]">{formatPrice(total)}</TableCell>
                 <TableCell className="text-right">
                   <ReceiptDialog
                     studentId={s.id}
                     defaultYear={year}
                     defaultMonth={month}
-                    trigger={<Button size="sm" variant="outline">🧾 Phiếu</Button>}
+                    trigger={<button className="candy-btn-outline text-xs">🧾 Phiếu</button>}
                   />
                 </TableCell>
               </TableRow>
@@ -90,6 +92,7 @@ export function StudentTable() {
           )}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }
