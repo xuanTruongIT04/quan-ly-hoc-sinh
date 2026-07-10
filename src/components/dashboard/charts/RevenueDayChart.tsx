@@ -15,7 +15,7 @@ export function RevenueDayChart() {
   const days = revenueByDayInMonth(students, attendance, year, month, extraFees)
   const chartData = {
     labels: days.map((d) => String(d.day)),
-    datasets: [{ label: t('revenueByDay'), data: days.map((d) => d.amount), backgroundColor: '#a78bfa' }],
+    datasets: [{ label: t('revenueByDay'), data: days.map((d) => d.amount), backgroundColor: '#ce93d8', borderRadius: 8 }],
   }
   const options = {
     responsive: true,
@@ -27,7 +27,7 @@ export function RevenueDayChart() {
   }
   return (
     <div>
-      <div className="mb-1 text-sm font-semibold text-gray-600">
+      <div className="mb-1 font-heading text-sm font-bold text-[#c2185b]">
         {t('revenueByDay')} — {month}/{year}
       </div>
       <Bar data={chartData} options={options} />

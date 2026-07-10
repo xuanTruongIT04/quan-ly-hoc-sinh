@@ -19,7 +19,8 @@ export function RevenueMonthChart() {
       {
         label: t('revenueByMonth'),
         data,
-        backgroundColor: data.map((_, i) => (i + 1 === month ? '#db2777' : '#f9a8d4')),
+        backgroundColor: data.map((_, i) => (i + 1 === month ? '#c2185b' : '#f9a8d4')),
+        borderRadius: 8,
       },
     ],
   }
@@ -33,7 +34,7 @@ export function RevenueMonthChart() {
   }
   return (
     <div>
-      <div className="mb-1 text-sm font-semibold text-gray-600">
+      <div className="mb-1 font-heading text-sm font-bold text-[#c2185b]">
         {t('revenueByMonth')} — {year}
       </div>
       <Bar data={chartData} options={options} />

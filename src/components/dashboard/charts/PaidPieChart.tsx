@@ -14,8 +14,8 @@ export function PaidPieChart() {
   if (paid + unpaid === 0) {
     return (
       <div>
-        <div className="mb-1 text-sm font-semibold text-gray-600">{t('paidRatio')}</div>
-        <div className="flex h-40 items-center justify-center text-sm text-gray-400">{t('noData')}</div>
+        <div className="mb-1 font-heading text-sm font-bold text-[#c2185b]">{t('paidRatio')}</div>
+        <div className="flex h-40 items-center justify-center text-sm text-[#b39a92]">{t('noData')}</div>
       </div>
     )
   }
@@ -25,7 +25,7 @@ export function PaidPieChart() {
   }
   return (
     <div>
-      <div className="mb-1 text-sm font-semibold text-gray-600">
+      <div className="mb-1 font-heading text-sm font-bold text-[#c2185b]">
         {t('paidRatio')} — {month}/{year}
       </div>
       <Doughnut data={chartData} options={{ responsive: true }} />
