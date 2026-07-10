@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-nunito);
+  --font-mono: var(--font-nunito);
+  --font-heading: var(--font-comfortaa);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,38 +49,38 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: oklch(0.985 0.008 350);      /* #fff8fa nền hồng trắng */
+  --foreground: oklch(0.34 0.03 40);         /* #4e342e nâu ấm */
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.34 0.03 40);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.34 0.03 40);
+  --primary: oklch(0.52 0.20 358);           /* #c2185b magenta */
+  --primary-foreground: oklch(0.99 0.01 350);
+  --secondary: oklch(0.95 0.03 350);         /* hồng nhạt */
+  --secondary-foreground: oklch(0.52 0.20 358);
+  --muted: oklch(0.96 0.015 350);
+  --muted-foreground: oklch(0.55 0.04 30);
+  --accent: oklch(0.93 0.05 350);
+  --accent-foreground: oklch(0.52 0.20 358);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --border: oklch(0.90 0.03 350);            /* viền hồng nhạt */
+  --input: oklch(0.90 0.03 350);
+  --ring: oklch(0.70 0.15 350);              /* focus ring hồng */
+  --chart-1: oklch(0.75 0.16 350);           /* hồng */
+  --chart-2: oklch(0.65 0.16 320);           /* tím */
+  --chart-3: oklch(0.72 0.13 265);           /* lam */
+  --chart-4: oklch(0.80 0.13 90);            /* vàng kem */
+  --chart-5: oklch(0.72 0.15 160);           /* mint */
+  --radius: 0.9rem;                          /* bo mềm hơn */
+  --sidebar: oklch(0.975 0.012 350);         /* hồng nhạt hơn nền chút */
+  --sidebar-foreground: oklch(0.34 0.03 40);
+  --sidebar-primary: oklch(0.52 0.20 358);
+  --sidebar-primary-foreground: oklch(0.99 0.01 350);
+  --sidebar-accent: oklch(0.93 0.05 350);
+  --sidebar-accent-foreground: oklch(0.52 0.20 358);
+  --sidebar-border: oklch(0.90 0.03 350);
+  --sidebar-ring: oklch(0.70 0.15 350);
 }
 
 .dark {
@@ -127,4 +127,55 @@
   html {
     @apply font-sans;
   }
+}
+
+@layer components {
+  .candy-card {
+    @apply rounded-[28px] border border-[#fbdce7] bg-white p-5;
+    box-shadow: 0 8px 22px rgba(216, 27, 96, 0.12);
+  }
+  .candy-btn {
+    @apply inline-flex items-center gap-1.5 rounded-full px-5 py-2.5 font-heading text-sm font-bold text-white transition-all;
+    background: linear-gradient(135deg, #e91e63, #c2185b);
+    box-shadow: 0 5px 15px rgba(216, 27, 96, 0.28);
+  }
+  .candy-btn:hover { filter: brightness(1.05); }
+  .candy-btn-outline {
+    @apply inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-[#f7a8c4] bg-white px-4 py-2 text-sm font-bold text-[#c2185b] transition-colors;
+    box-shadow: 0 3px 10px rgba(216, 27, 96, 0.08);
+  }
+  .candy-btn-outline:hover { background: #fff0f5; }
+  .candy-input {
+    @apply rounded-full border-[1.5px] border-[#f06292] bg-white px-5 py-2.5 font-bold text-[#4e342e] outline-none;
+  }
+  .candy-input:focus {
+    box-shadow: 0 0 0 4px rgba(216, 27, 96, 0.2);
+  }
+  .candy-pill {
+    @apply inline-flex items-center rounded-full bg-[#fce4ec] px-3 py-1 text-xs font-bold text-[#c2185b];
+  }
+  .stat-card {
+    @apply flex items-center gap-4 rounded-[32px] px-7 py-6 text-white;
+    box-shadow: 0 10px 26px rgba(216, 27, 96, 0.15);
+  }
+  .stat-students { background: linear-gradient(135deg, #fde0ec, #fbc4dc); color: #c2185b; }
+  .stat-year { background: linear-gradient(135deg, #f06292, #c2185b); }
+  .stat-month { background: linear-gradient(135deg, #ce93d8, #ab47bc); }
+  .stat-today { background: linear-gradient(135deg, #b3c7f7, #7e9df0); }
+  .stat-circle {
+    @apply grid h-16 w-16 flex-none place-items-center rounded-full text-2xl font-bold;
+    background: rgba(255, 255, 255, 0.9);
+    color: #c2185b;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  .candy-table {
+    @apply overflow-hidden rounded-[28px] border border-[#fbdce7] bg-white;
+    box-shadow: 0 8px 22px rgba(216, 27, 96, 0.12);
+  }
+  .candy-table thead th {
+    @apply px-4 py-4 text-left text-xs font-extrabold uppercase tracking-wide text-[#c2185b];
+    background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+  }
+  .candy-table tbody td { @apply border-t border-[#fbe4ee] px-4 py-4 text-sm font-bold; }
+  .candy-table tbody tr:nth-child(even) { @apply bg-[#fff9fb]; }
 }
