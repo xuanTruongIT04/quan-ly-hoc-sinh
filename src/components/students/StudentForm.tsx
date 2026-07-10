@@ -89,7 +89,7 @@ export function StudentForm({ editing, trigger }: { editing?: Student; trigger: 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger render={trigger} />
-      <DialogContent>
+      <DialogContent className="**:data-[slot=dialog-close]:text-white">
         <StudentFormFields key={editing?.id ?? 'new'} editing={editing} onDone={() => setOpen(false)} />
       </DialogContent>
     </Dialog>

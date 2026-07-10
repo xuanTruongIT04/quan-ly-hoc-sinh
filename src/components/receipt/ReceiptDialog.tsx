@@ -114,7 +114,7 @@ export function ReceiptDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger render={trigger} />
-      <DialogContent>
+      <DialogContent className="**:data-[slot=dialog-close]:text-white">
         <DialogHeader className="-mx-4 -mt-4 rounded-t-xl px-5 py-4" style={{ background: 'linear-gradient(135deg,#e91e63,#c2185b)' }}>
           <DialogTitle className="text-white">
             🧾 {t('title')} — {student?.fullName}
