@@ -17,7 +17,7 @@ export function AttendanceBoard() {
   const [date, setDate] = useState(localTodayISO())
 
   if (classes.length === 0) {
-    return <div className="rounded-lg border p-8 text-center text-gray-500">{t('noClass')}</div>
+    return <div className="candy-card p-8 text-center text-[#8d6e63]">{t('noClass')}</div>
   }
 
   const inClass = students
@@ -30,39 +30,39 @@ export function AttendanceBoard() {
     <div className="space-y-4">
       <div className="flex flex-wrap items-end gap-2">
         <div>
-          <div className="mb-1 text-xs text-gray-500">{t('selectClass')}</div>
+          <div className="mb-1 text-xs font-semibold text-[#8d6e63]">{t('selectClass')}</div>
           <Select value={cls} onValueChange={(v) => v && setCls(v)}>
             <SelectTrigger className="w-48"><SelectValue /></SelectTrigger>
             <SelectContent>{classes.map((c) => <SelectItem key={c} value={c}>{c}</SelectItem>)}</SelectContent>
           </Select>
         </div>
         <div>
-          <div className="mb-1 text-xs text-gray-500">{t('date')}</div>
+          <div className="mb-1 text-xs font-semibold text-[#8d6e63]">{t('date')}</div>
           <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-44" />
         </div>
-        <Button variant="outline" onClick={() => { markClassPresent(inClass.map((s) => s.id), date); toast.success(t('saved')) }}>
+        <button type="button" className="candy-btn-outline" onClick={() => { markClassPresent(inClass.map((s) => s.id), date); toast.success(t('saved')) }}>
           {t('markAllPresent')}
-        </Button>
+        </button>
         <BulkAttendanceDialog className={cls} studentIds={inClass.map((s) => s.id)} />
       </div>
 
-      <div className="divide-y rounded-lg border">
+      <div className="candy-card divide-y divide-[#fbe4ee] p-0">
         {inClass.map((s) => {
           const st = statusOf(s.id)
           return (
-            <div key={s.id} className="flex items-center justify-between p-3">
-              <span className="font-medium">{s.fullName}</span>
+            <div key={s.id} className="flex items-center justify-between p-4">
+              <span className="font-bold text-[#4e342e]">{s.fullName}</span>
               <div className="flex gap-2">
-                <Button size="sm" variant={st === 'present' ? 'default' : 'outline'}
+                <Button size="sm" variant={st === 'present' ? 'default' : 'outline'} className="rounded-full"
                   onClick={() => { setAttendance(s.id, date, 'present'); toast.success(t('saved')) }}>
                   {t('present')}
                 </Button>
                 <Button size="sm" variant="outline"
-                  className={st === 'present2' ? 'bg-amber-500 text-white hover:bg-amber-600' : ''}
+                  className={st === 'present2' ? 'rounded-full bg-amber-500 text-white hover:bg-amber-600' : 'rounded-full'}
                   onClick={() => { setAttendance(s.id, date, 'present2'); toast.success(t('saved')) }}>
                   {t('present2')}
                 </Button>
-                <Button size="sm" variant={st === 'absent' ? 'destructive' : 'outline'}
+                <Button size="sm" variant={st === 'absent' ? 'destructive' : 'outline'} className="rounded-full"
                   onClick={() => { setAttendance(s.id, date, 'absent'); toast.success(t('saved')) }}>
                   {t('absent')}
                 </Button>
