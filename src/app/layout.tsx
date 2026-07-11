@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { Toaster } from "@/components/ui/sonner";
 import { AppSidebar } from "@/components/layout/AppSidebar";
+import { QuickMenu } from "@/components/layout/QuickMenu";
 import { StoreHydration } from "@/components/StoreHydration";
 import "./globals.css";
 
@@ -44,6 +45,7 @@ export default async function RootLayout({
               <AppSidebar />
               <main className="flex-1 p-6">{children}</main>
             </div>
+            <QuickMenu />
           </StoreHydration>
           <Toaster richColors position="top-center" />
         </NextIntlClientProvider>
