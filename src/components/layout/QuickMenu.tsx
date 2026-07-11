@@ -60,8 +60,15 @@ export function QuickMenu() {
     function onDocClick(e: MouseEvent) {
       if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false)
     }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false)
+    }
     document.addEventListener('mousedown', onDocClick)
-    return () => document.removeEventListener('mousedown', onDocClick)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDocClick)
+      document.removeEventListener('keydown', onKey)
+    }
   }, [open])
 
   // Đọc vị trí đã lưu SAU mount (localStorage không có ở SSR → tránh hydration mismatch).
@@ -168,6 +175,8 @@ export function QuickMenu() {
       <button
         type="button"
         aria-label="Quick Menu"
+        aria-haspopup="menu"
+        aria-expanded={open}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
