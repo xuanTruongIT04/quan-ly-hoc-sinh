@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
@@ -48,8 +48,18 @@ const MENU_GROUPS: MenuGroup[] = [
 
 export function QuickMenu() {
   const router = useRouter()
-  const [open, setOpen] = useState(true) // TẠM true để dựng UI; Task 2 đổi về false
+  const [open, setOpen] = useState(false)
   const [openGroups, setOpenGroups] = useState<number[]>([0])
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    function onDocClick(e: MouseEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false)
+    }
+    document.addEventListener('mousedown', onDocClick)
+    return () => document.removeEventListener('mousedown', onDocClick)
+  }, [open])
 
   function toggleGroup(i: number) {
     setOpenGroups((g) => (g.includes(i) ? g.filter((x) => x !== i) : [...g, i]))
@@ -64,7 +74,7 @@ export function QuickMenu() {
   }
 
   return (
-    <>
+    <div ref={rootRef}>
       {open && (
         <div className="fixed bottom-[90px] right-6 z-40 w-[290px] overflow-hidden rounded-[22px] bg-white shadow-[0_14px_40px_rgba(120,40,140,0.28)]">
           <div className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-fuchsia-600 px-[18px] py-[14px] font-heading text-[15px] font-bold text-white">
@@ -120,6 +130,6 @@ export function QuickMenu() {
       >
         ⚡
       </button>
-    </>
+    </div>
   )
 }
