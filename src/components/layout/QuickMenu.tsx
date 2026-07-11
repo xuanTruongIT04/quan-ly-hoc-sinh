@@ -50,7 +50,10 @@ export function QuickMenu() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [openGroups, setOpenGroups] = useState<number[]>([0])
+  const [hidden, setHidden] = useState(false)
+  const [pos, setPos] = useState<{ x: number; y: number } | null>(null)
   const rootRef = useRef<HTMLDivElement>(null)
+  const dragRef = useRef<{ startX: number; startY: number; moved: boolean } | null>(null)
 
   useEffect(() => {
     if (!open) return
@@ -60,6 +63,43 @@ export function QuickMenu() {
     document.addEventListener('mousedown', onDocClick)
     return () => document.removeEventListener('mousedown', onDocClick)
   }, [open])
+
+  // Đọc vị trí đã lưu SAU mount (localStorage không có ở SSR → tránh hydration mismatch).
+  // set-state-in-effect là chủ ý ở đây: sync-once từ external store (localStorage) sau khi mount.
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('qlhs_quickmenu_pos')
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      if (raw) setPos(JSON.parse(raw))
+    } catch {}
+  }, [])
+
+  function onPointerDown(e: React.PointerEvent) {
+    dragRef.current = { startX: e.clientX, startY: e.clientY, moved: false }
+    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+  }
+  function onPointerMove(e: React.PointerEvent) {
+    const d = dragRef.current
+    if (!d) return
+    if (Math.abs(e.clientX - d.startX) > 5 || Math.abs(e.clientY - d.startY) > 5) d.moved = true
+    if (d.moved) {
+      const x = Math.min(window.innerWidth - 60, Math.max(4, e.clientX - 28))
+      const y = Math.min(window.innerHeight - 60, Math.max(4, e.clientY - 28))
+      setPos({ x, y })
+    }
+  }
+  function onPointerUp() {
+    const d = dragRef.current
+    dragRef.current = null
+    if (d && d.moved) {
+      setPos((p) => {
+        if (p) localStorage.setItem('qlhs_quickmenu_pos', JSON.stringify(p))
+        return p
+      })
+    } else {
+      setOpen((o) => !o) // không kéo = click = toggle panel
+    }
+  }
 
   function toggleGroup(i: number) {
     setOpenGroups((g) => (g.includes(i) ? g.filter((x) => x !== i) : [...g, i]))
@@ -72,6 +112,8 @@ export function QuickMenu() {
       toast.info(a.message)
     }
   }
+
+  if (hidden) return null
 
   return (
     <div ref={rootRef}>
@@ -116,6 +158,7 @@ export function QuickMenu() {
           })}
           <button
             type="button"
+            onClick={() => { setHidden(true); setOpen(false) }}
             className="flex w-full items-center gap-2 bg-[#faf3fb] px-[18px] py-3 text-left text-[13px] font-bold text-[#9333ea] hover:bg-[#f5e9f7]"
           >
             👁️ Ẩn menu nổi
@@ -125,8 +168,11 @@ export function QuickMenu() {
       <button
         type="button"
         aria-label="Quick Menu"
-        onClick={() => setOpen((o) => !o)}
-        className="fixed bottom-[90px] right-6 z-50 grid h-14 w-14 place-items-center rounded-full border-[3px] border-white/85 bg-gradient-to-br from-purple-500 to-[#c2185b] text-2xl text-white shadow-[0_8px_24px_rgba(168,85,247,0.4)]"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        style={pos ? { left: pos.x, top: pos.y, right: 'auto', bottom: 'auto' } : undefined}
+        className="fixed bottom-[90px] right-6 z-50 grid h-14 w-14 cursor-grab touch-none place-items-center rounded-full border-[3px] border-white/85 bg-gradient-to-br from-purple-500 to-[#c2185b] text-2xl text-white shadow-[0_8px_24px_rgba(168,85,247,0.4)] active:cursor-grabbing"
       >
         ⚡
       </button>
