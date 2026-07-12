@@ -44,7 +44,7 @@ export function SummaryTable() {
         <MonthYearPicker />
         <button type="button" className="candy-btn" onClick={onExport}>📊 Xuất Excel</button>
       </div>
-      <div className="candy-table overflow-x-auto">
+      <div className="overflow-x-auto rounded-[28px] border border-[#fbdce7] bg-white shadow-[0_8px_22px_rgba(216,27,96,0.12)]">
         <table className="w-full border-collapse text-sm">
           <thead>
             <tr>
