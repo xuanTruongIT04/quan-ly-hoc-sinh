@@ -25,23 +25,13 @@ const MENU_GROUPS: MenuGroup[] = [
     items: [
       { icon: '👶', label: 'Quản lý học sinh', action: { type: 'nav', href: '/students' } },
       { icon: '📋', label: 'Điểm danh hàng loạt', action: { type: 'nav', href: '/attendance' } },
-      { icon: '☑️', label: 'Chấm công GV', action: { type: 'toast', message: SOON } },
-      { icon: '⚙️', label: 'Thiết lập trung tâm', action: { type: 'toast', message: SOON } },
-      { icon: '🛡️', label: 'Quản trị tài khoản', action: { type: 'toast', message: SOON } },
+      { icon: '⚙️', label: 'Thiết lập trung tâm', action: { type: 'nav', href: '/settings' } },
     ],
   },
   {
     icon: '🎨', label: 'CẤU HÌNH GIAO DIỆN',
     items: [
       { icon: '🎨', label: 'Giao diện phiếu', action: { type: 'toast', message: 'Mở phiếu bất kỳ (nút 🧾 Phiếu) để đổi giao diện' } },
-    ],
-  },
-  {
-    icon: '📖', label: 'HƯỚNG DẪN & HỖ TRỢ',
-    items: [
-      { icon: '🚀', label: 'Tính năng hệ thống', action: { type: 'toast', message: SOON } },
-      { icon: '🎬', label: 'Xem hướng dẫn', action: { type: 'toast', message: SOON } },
-      { icon: '💬', label: 'Zalo hỗ trợ', action: { type: 'toast', message: SOON } },
     ],
   },
 ]
