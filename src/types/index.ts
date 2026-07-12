@@ -41,3 +41,11 @@ export interface ScorePair {
   s1: number | null   // điểm cột 1 (0-10), null = chưa nhập
   s2: number | null   // điểm cột 2
 }
+
+export interface Settings {
+  teacherName: string
+  schoolName: string
+  defaultFee: number       // VND
+  receiptGreeting: string
+  bank: BankConfig
+}
