@@ -21,7 +21,7 @@ export const useSettingsStore = create<SettingsState>()(
     (set) => ({
       ...DEFAULT_SETTINGS,
       setSettings: (patch) => set((s) => ({ ...s, ...patch })),
-      resetSettings: () => set({ ...DEFAULT_SETTINGS }),
+      resetSettings: () => set({ ...DEFAULT_SETTINGS, bank: { ...DEFAULT_SETTINGS.bank } }),
     }),
     {
       name: 'qlhs_settings_v1',
