@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
-import { CONFIG } from '@/lib/config'
+import { useSettingsStore } from '@/store/useSettingsStore'
 import { localTodayISO } from '@/lib/utils'
 import type { Student } from '@/types'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog'
@@ -13,6 +13,7 @@ export function BulkImportDialog() {
   const t = useTranslations('students')
   const tc = useTranslations('common')
   const { addStudentsBulk } = useAppStore()
+  const defaultFee = useSettingsStore((s) => s.defaultFee)
   const [open, setOpen] = useState(false)
   const [text, setText] = useState('')
 
@@ -23,7 +24,7 @@ export function BulkImportDialog() {
         fullName: fullName ?? '',
         className: className ?? '',
         feeMode: 'per_session' as const,
-        fee: Number(fee) || CONFIG.defaultFee,
+        fee: Number(fee) || defaultFee,
         startDate: localTodayISO(),
         sortOrder: 100 + i,
       }

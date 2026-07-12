@@ -2,6 +2,7 @@
 import { forwardRef } from 'react'
 import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
+import { useSettingsStore } from '@/store/useSettingsStore'
 import { countSessions, receiptTotal } from '@/lib/fees'
 import { formatPrice, isInMonth } from '@/lib/utils'
 import { CONFIG } from '@/lib/config'
@@ -31,6 +32,7 @@ export const ReceiptCard = forwardRef<
 >(function ReceiptCard({ studentId, year, month, comment, theme, onQrReady, extraFee, paid, score }, ref) {
   const t = useTranslations('receipt')
   const { students, attendance, getExtraFee, isPaid, getScore } = useAppStore()
+  const { schoolName, receiptGreeting, bank: bankCfg } = useSettingsStore()
   const student = students.find((s) => s.id === studentId)
   if (!student) return null
 
@@ -44,7 +46,7 @@ export const ReceiptCard = forwardRef<
   const dayRecords = attendance
     .filter((a) => a.studentId === student.id && a.status !== 'absent' && isInMonth(a.date, year, month))
     .sort((a, b) => a.date.localeCompare(b.date))
-  const bank = getBank(CONFIG.bank.bankCode)
+  const bank = getBank(bankCfg.bankCode)
 
   return (
     <div
@@ -52,7 +54,7 @@ export const ReceiptCard = forwardRef<
       className={`mx-auto w-[360px] rounded-2xl ${th.cardBg} p-5 text-sm text-gray-700`}
     >
       <div className="text-center">
-        <div className={`text-xs font-semibold ${th.accentText}`}>{CONFIG.schoolName}</div>
+        <div className={`text-xs font-semibold ${th.accentText}`}>{schoolName}</div>
         <h2 className={`text-lg font-extrabold ${th.accentText}`}>🧾 {t('title')}</h2>
         <div className={`text-xs ${th.subText}`}>
           {t('month')} {month}/{year}
@@ -113,16 +115,16 @@ export const ReceiptCard = forwardRef<
             {sc.s2 != null && <span>{CONFIG.scoreLabels[1]}: <b>{sc.s2}</b></span>}
           </div>
         )}
-        <div className={`mt-1 text-xs ${th.accentText}`}>{CONFIG.receiptGreeting}</div>
+        <div className={`mt-1 text-xs ${th.accentText}`}>{receiptGreeting}</div>
       </div>
       <div className="mt-3 flex flex-col items-center gap-1">
         <VietQrCode amount={total} addInfo={`Hoc phi ${student.fullName}`} onReady={onQrReady} />
-        {bank && CONFIG.bank.accountNumber && (
+        {bank && bankCfg.accountNumber && (
           <div className="text-center text-xs">
             <div>
-              {bank.name} · {CONFIG.bank.accountNumber}
+              {bank.name} · {bankCfg.accountNumber}
             </div>
-            <div className="font-semibold">{CONFIG.bank.accountName}</div>
+            <div className="font-semibold">{bankCfg.accountName}</div>
           </div>
         )}
       </div>

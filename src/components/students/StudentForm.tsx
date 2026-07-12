@@ -4,7 +4,7 @@ import { z } from 'zod'
 import { toast } from 'sonner'
 import { useTranslations } from 'next-intl'
 import { useAppStore } from '@/store/useAppStore'
-import { CONFIG } from '@/lib/config'
+import { useSettingsStore } from '@/store/useSettingsStore'
 import { localTodayISO } from '@/lib/utils'
 import type { Student, FeeMode } from '@/types'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog'
@@ -29,11 +29,12 @@ function StudentFormFields({ editing, onDone }: { editing?: Student; onDone: () 
   const t = useTranslations('students')
   const tc = useTranslations('common')
   const { addStudent, updateStudent, classNames } = useAppStore()
+  const defaultFee = useSettingsStore((s) => s.defaultFee)
   const [form, setForm] = useState({
     fullName: editing?.fullName ?? '',
     className: editing?.className ?? '',
     feeMode: (editing?.feeMode ?? 'per_session') as FeeMode,
-    fee: editing?.fee ?? CONFIG.defaultFee,
+    fee: editing?.fee ?? defaultFee,
     fee2: editing?.fee2 ?? 0,
     startDate: editing?.startDate ?? localTodayISO(),
     sortOrder: editing?.sortOrder ?? 999,

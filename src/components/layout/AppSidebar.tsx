@@ -3,12 +3,13 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { NAV_ITEMS } from '@/lib/navigation'
-import { CONFIG } from '@/lib/config'
+import { useSettingsStore } from '@/store/useSettingsStore'
 import { cn } from '@/lib/utils'
 
 export function AppSidebar() {
   const t = useTranslations()
   const pathname = usePathname()
+  const teacherName = useSettingsStore((s) => s.teacherName)
   return (
     <aside className="w-56 shrink-0 border-r border-[#fbdce7] bg-sidebar p-4">
       <div
@@ -17,7 +18,7 @@ export function AppSidebar() {
       >
         <span className="text-xl">🍭</span>
         <span className="font-heading text-base font-bold tracking-wide text-white">
-          {CONFIG.teacherName}
+          {teacherName}
         </span>
       </div>
       <nav className="flex flex-col gap-1">
