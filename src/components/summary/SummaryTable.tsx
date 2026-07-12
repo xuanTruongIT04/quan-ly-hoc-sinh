@@ -3,6 +3,8 @@ import { useAppStore } from '@/store/useAppStore'
 import { usePeriodStore } from '@/store/usePeriodStore'
 import { receiptTotal } from '@/lib/fees'
 import { formatPrice } from '@/lib/utils'
+import { exportSummaryXlsx } from '@/lib/export-excel'
+import { toast } from 'sonner'
 import { MonthYearPicker } from '@/components/dashboard/MonthYearPicker'
 
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1)
@@ -31,9 +33,17 @@ export function SummaryTable() {
     return <div className="candy-card p-8 text-center text-[#8d6e63]">Chưa có học sinh nào.</div>
   }
 
+  function onExport() {
+    exportSummaryXlsx(students, attendance, getExtraFee, year)
+    toast.success(`Đã xuất bảng tổng hợp ${year} ra Excel 📊`)
+  }
+
   return (
     <div className="space-y-4">
-      <MonthYearPicker />
+      <div className="flex flex-wrap items-center gap-2">
+        <MonthYearPicker />
+        <button type="button" className="candy-btn" onClick={onExport}>📊 Xuất Excel</button>
+      </div>
       <div className="candy-table overflow-x-auto">
         <table className="w-full border-collapse text-sm">
           <thead>
