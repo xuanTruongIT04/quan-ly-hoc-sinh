@@ -15,7 +15,7 @@ const MENU_GROUPS: MenuGroup[] = [
     items: [
       { icon: '📋', label: 'Xem Điểm Danh Tháng', action: { type: 'nav', href: '/attendance' } },
       { icon: '💳', label: 'Quản lý Thu nợ', action: { type: 'nav', href: '/debts' } },
-      { icon: '💰', label: 'Bảng phụ phí', action: { type: 'toast', message: SOON } },
+      { icon: '💰', label: 'Bảng phụ phí', action: { type: 'nav', href: '/extra-fees' } },
       { icon: '📊', label: 'Xuất Excel', action: { type: 'toast', message: SOON } },
       { icon: '📋', label: 'Bảng tổng hợp', action: { type: 'nav', href: '/summary' } },
     ],
