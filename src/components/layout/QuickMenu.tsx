@@ -29,7 +29,7 @@ const MENU_GROUPS: MenuGroup[] = [
   {
     icon: '🎨', label: 'CẤU HÌNH GIAO DIỆN',
     items: [
-      { icon: '🎨', label: 'Giao diện phiếu', action: { type: 'toast', message: 'Mở phiếu bất kỳ (nút 🧾 Phiếu) để đổi giao diện' } },
+      { icon: '🎨', label: 'Giao diện phiếu', action: { type: 'nav', href: '/receipt-theme' } },
     ],
   },
 ]
