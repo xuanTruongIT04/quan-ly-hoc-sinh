@@ -1,8 +1,8 @@
 import type { BankConfig } from '@/types'
 
 const bank: BankConfig = {
-  bankCode: '',            // Trang Nhung điền: VD 'BIDV' (xem src/lib/napas-banks.ts)
-  accountNumber: '',       // Trang Nhung điền số tài khoản
+  bankCode: 'MB',          // MB Bank (xem src/lib/napas-banks.ts)
+  accountNumber: '9060117062002',
   accountName: 'NGUYEN TRANG NHUNG',
 }
 
